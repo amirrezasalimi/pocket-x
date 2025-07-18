@@ -1,0 +1,109 @@
+# shadcn components documentation
+
+- [Component Library Platform](https://ui.shadcn.com/): Create and manage a component library for web development with user-friendly features.
+- [Tooltip Component Documentation](https://ui.shadcn.com/docs/components/tooltip): Provide documentation for implementing and using the Tooltip component in the Shadcn UI library.
+- [Skeleton Component Documentation](https://ui.shadcn.com/docs/components/skeleton): Provide documentation for the Skeleton component in the shadcn/ui library.
+- [Dark Mode Documentation](https://ui.shadcn.com/docs/dark-mode): Guide for implementing dark mode in shadcn/ui applications.
+- [Task Management Interface](https://ui.shadcn.com/examples/tasks): Showcases a task management interface for users to view and manage tasks within a component library.
+- [Sonner Documentation](https://ui.shadcn.com/docs/components/sonner): To provide documentation and resources for the Sonner toast component in React applications.
+- [Dialog Component Documentation](https://ui.shadcn.com/docs/components/dialog): To provide documentation and examples for implementing the Dialog component in web applications.
+- [Calendar Component Documentation](https://ui.shadcn.com/docs/components/calendar): This webpage documents the Calendar component, including installation, usage, customization, and examples.
+- [Sidebar Component Documentation](https://ui.shadcn.com/docs/components/sidebar): To provide documentation for integrating and customizing a sidebar component in web applications.
+- [Label Component Documentation](https://ui.shadcn.com/docs/components/label): Detailed documentation for implementing the Label component in a UI library.
+- [Monorepo Setup Guide](https://ui.shadcn.com/docs/monorepo): Provide guidance on using shadcn/ui components in a monorepo setup.
+- [Tailwind Color Palette](https://ui.shadcn.com/colors): Offers a comprehensive Tailwind color palette in various formats for easy integration into projects.
+- [shadcn/ui Documentation](https://ui.shadcn.com/docs): Introductory guide for using and customizing shadcn/ui components for various frameworks.
+- [Chart Component Documentation](https://ui.shadcn.com/docs/components/chart): To provide documentation and examples for using chart components with Recharts in web applications.
+- [Installation Guide](https://ui.shadcn.com/docs/installation): Instructions for installing and structuring a shadcn/ui application with different frameworks.
+- [Component Registry Guide](https://ui.shadcn.com/docs/registry): Guide for running your own component registry for React projects.
+- [Textarea Component Documentation](https://ui.shadcn.com/docs/components/textarea): Documentation for the Textarea component in shadcn/ui library with installation and usage examples.
+- [Component Library Dashboard](https://ui.shadcn.com/examples/dashboard): Showcase a component library with examples and analytics dashboard for developers.
+- [Scroll Area Component](https://ui.shadcn.com/docs/components/scroll-area): Describes the Scroll Area component for custom scroll functionality and cross-browser styling.
+- [FAQ on Registry](https://ui.shadcn.com/docs/registry/faq): Answer common questions related to the shadcn/ui registry.
+- [Context Menu Documentation](https://ui.shadcn.com/docs/components/context-menu): Detailing the functionality and usage of the Context Menu component in UI development.
+- [Radar Charts Overview](https://ui.shadcn.com/charts/radar): Showcase various radar chart components for use in applications with sample data visualizations.
+- [React Hook Form Guide](https://ui.shadcn.com/docs/components/form): Guide for building accessible forms using React Hook Form and Zod.
+- [Navigation Menu Documentation](https://ui.shadcn.com/docs/components/navigation-menu): Offering a navigation menu component and its documentation for web development.
+- [Radio Group Documentation](https://ui.shadcn.com/docs/components/radio-group): Provides documentation for implementing a radio group component in user interfaces.
+- [Interactive Bar Charts](https://ui.shadcn.com/charts/bar): Offer a variety of interactive bar chart components for developers to integrate into their applications.
+- [Avatar Component Guide](https://ui.shadcn.com/docs/components/avatar): Guide users in implementing and utilizing the Avatar component in their applications.
+- [Open in v0 Integration](https://ui.shadcn.com/docs/registry/open-in-v0): Guide users on integrating their registry with the Open in v0 feature.
+- [Progress Component Guide](https://ui.shadcn.com/docs/components/progress): Guide on using the Progress component in a UI library.
+- [Menubar Documentation](https://ui.shadcn.com/docs/components/menubar): This page documents the Menubar component for building navigation menus in user interfaces.
+- [Component Playground](https://ui.shadcn.com/examples/playground): Facilitate the creation and testing of UI components in a code playground.
+- [Alert Dialog Documentation](https://ui.shadcn.com/docs/components/alert-dialog): To provide documentation for implementing the Alert Dialog component in user interfaces.
+- [React Router Installation](https://ui.shadcn.com/docs/installation/react-router): Guide users on installing and configuring shadcn/ui for React Router applications.
+- [Dark Mode in Vite](https://ui.shadcn.com/docs/dark-mode/vite): Guide on implementing dark mode in Vite applications.
+- [shadcn/ui Figma Guide](https://ui.shadcn.com/docs/figma): Guide for using and installing shadcn/ui components in Figma.
+- [Tooltip Chart Components](https://ui.shadcn.com/charts/tooltip): Showcases various tooltip components for chart customization using Recharts.
+- [Separator Component Info](https://ui.shadcn.com/docs/components/separator): This page details the usage and installation of the Separator component in the Radix UI library.
+- [Getting Started Guide](https://ui.shadcn.com/docs/registry/getting-started): Guide for setting up a component registry using shadcn.
+- [Button Component Documentation](https://ui.shadcn.com/docs/components/button): Documentation for implementing and using button components in the shadcn/ui library.
+- [Area Chart Components](https://ui.shadcn.com/charts/area): Showcases various interactive area chart components for developers to implement in their applications.
+- [Toggle Group Documentation](https://ui.shadcn.com/docs/components/toggle-group): Provides documentation and examples for implementing the Toggle Group component in user interfaces.
+- [Components Configuration Guide](https://ui.shadcn.com/docs/components-json): Guide for configuring components in the shadcn/ui project using components.json.
+- [Alert Component Documentation](https://ui.shadcn.com/docs/components/alert): Explains how to implement and use alert components in the ShadCN UI framework.
+- [TanStack Start Installation](https://ui.shadcn.com/docs/installation/tanstack): Guide to install and configure shadcn/ui for TanStack Start projects.
+- [Card Component Documentation](https://ui.shadcn.com/docs/components/card): Provides documentation and examples for implementing the Card component in user interfaces.
+- [Slider Component Documentation](https://ui.shadcn.com/docs/components/slider): This page provides documentation for the Slider component, including installation and usage instructions.
+- [Theming Documentation](https://ui.shadcn.com/docs/theming): Explain theming options and customization for a UI framework using CSS variables and utility classes.
+- [Laravel Installation Guide](https://ui.shadcn.com/docs/installation/laravel): Guide to install and configure shadcn/ui in Laravel projects.
+- [Date Picker Documentation](https://ui.shadcn.com/docs/components/date-picker): Documentation for implementing and using a date picker component in web applications.
+- [Contribute to Blocks Library](https://ui.shadcn.com/docs/blocks): Guide to contributing components to the Shadcn blocks library for developers.
+- [Switch Component Documentation](https://ui.shadcn.com/docs/components/switch): Guide for using the Switch component in a UI library.
+- [Next.js Installation Guide](https://ui.shadcn.com/docs/installation/next): Guide users in installing and configuring shadcn/ui for Next.js projects.
+- [Pagination Component Guide](https://ui.shadcn.com/docs/components/pagination): Guide to implementing pagination component in a user interface using shadcn.
+- [Popover Component Documentation](https://ui.shadcn.com/docs/components/popover): To provide documentation and usage examples for the Popover component in the Shadcn UI library.
+- [Toggle Component Documentation](https://ui.shadcn.com/docs/components/toggle): This page details the Toggle component's usage, installation, and examples within the shadcn/ui documentation.
+- [Combobox Component Documentation](https://ui.shadcn.com/docs/components/combobox): Documentation on implementing and using the Combobox component in the shadcn/ui framework.
+- [Typography Styling Guide](https://ui.shadcn.com/docs/components/typography): This page explains how to use typography styles with utility classes in a web application.
+- [Changelog Updates](https://ui.shadcn.com/docs/changelog): Summarizes the latest updates and announcements for shadcn/ui components.
+- [Carousel Component Docs](https://ui.shadcn.com/docs/components/carousel): This page offers documentation and examples for implementing a carousel component using the Embla library.
+- [Accordion Component Documentation](https://ui.shadcn.com/docs/components/accordion): To provide documentation and usage examples for the Accordion component in the ShadCN UI framework.
+- [Shadcn/ui Installation Guide](https://ui.shadcn.com/docs/installation/astro): Guide for installing and configuring shadcn/ui with Astro.
+- [Building Blocks for Web](https://ui.shadcn.com/blocks): Offer reusable UI components for web applications built with React.
+- [Registry Examples](https://ui.shadcn.com/docs/registry/examples): Provide examples of registry items for customizing UI components and themes using shadcn/ui.
+- [Resizable Component Guide](https://ui.shadcn.com/docs/components/resizable): Guide on implementing resizable panels with accessible keyboard support using React.
+- [Aspect Ratio Component](https://ui.shadcn.com/docs/components/aspect-ratio): Explains how to use the Aspect Ratio component in UI development.
+- [Customizable Themes for Projects](https://ui.shadcn.com/themes): Offer customizable themes and components for web development projects.
+- [Line Chart Components](https://ui.shadcn.com/charts/line): Offer a variety of line chart components for easy integration into applications.
+- [Registry Item JSON](https://ui.shadcn.com/docs/registry/registry-item-json): This page outlines the schema and usage of the registry-item.json for defining custom registry items.
+- [Manual Installation Guide](https://ui.shadcn.com/docs/installation/manual): Guide for manual installation of shadcn/ui components with Tailwind CSS.
+- [shadcn/ui Documentation](https://ui.shadcn.com/docs/legacy): Documentation for shadcn/ui components and installation instructions for development with Tailwind.
+- [Data Table Documentation](https://ui.shadcn.com/docs/components/data-table): Guide on building custom data tables using TanStack Table.
+- [Dark Mode Implementation Guide](https://ui.shadcn.com/docs/dark-mode/remix): Guide on implementing dark mode for Remix applications using Tailwind CSS and remix-themes.
+- [Hover Card Documentation](https://ui.shadcn.com/docs/components/hover-card): Explains how to use the Hover Card component for user interface design.
+- [Radial Chart Components](https://ui.shadcn.com/charts/radial): Showcases radial chart components for integration into applications using Recharts.
+- [UI Configuration Schema](https://ui.shadcn.com/schema.json): Defines a JSON schema for UI configuration in a project.
+- [Checkbox Component Documentation](https://ui.shadcn.com/docs/components/checkbox): Guide users on implementing a checkbox component in their applications.
+- [TanStack Router Installation](https://ui.shadcn.com/docs/installation/tanstack-router): Guide for installing and configuring shadcn/ui with TanStack Router.
+- [Components Documentation](https://ui.shadcn.com/docs/components): The page lists and details components available in the shadcn/ui library for developers.
+- [Pie Chart Components](https://ui.shadcn.com/charts/pie): Showcase ready-to-use pie chart components for application integration.
+- [Collapsible Component Guide](https://ui.shadcn.com/docs/components/collapsible): This page explains how to use the Collapsible component in the Shadcn UI library.
+- [Tabs Component Documentation](https://ui.shadcn.com/docs/components/tabs): This page provides documentation for using the Tabs component in the shadcn/ui library.
+- [React Drawer Component Docs](https://ui.shadcn.com/docs/components/drawer): Provide documentation and usage examples for the Drawer component in React.
+- [Dark Mode Setup Guide](https://ui.shadcn.com/docs/dark-mode/next): Guide on adding dark mode to Next.js applications using the next-themes library.
+- [Astro Dark Mode Integration](https://ui.shadcn.com/docs/dark-mode/astro): Guide on implementing dark mode in Astro applications.
+- [Toast Component Documentation](https://ui.shadcn.com/docs/components/toast): To provide documentation for the toast component within the shadcn/ui library, including its deprecation notice.
+- [JavaScript Components Documentation](https://ui.shadcn.com/docs/javascript): Guide for using shadcn/ui components with JavaScript.
+- [Installation Guide](https://ui.shadcn.com/docs/installation/vite): Guide for installing and configuring shadcn/ui with Vite.
+- [Command Component Documentation](https://ui.shadcn.com/docs/components/command): Documentation for the Command component in React, detailing installation, usage, and examples.
+- [Responsive Table Component](https://ui.shadcn.com/docs/components/table): Showcases a responsive table component for invoices with installation and usage instructions.
+- [Select Component Documentation](https://ui.shadcn.com/docs/components/select): Guide to using the Select component in shadcn/ui library.
+- [Documentation for shadcn/ui](https://ui.shadcn.com/docs/v0): Provide documentation and resources for using and customizing the shadcn/ui component library.
+- [Authentication Component Example](https://ui.shadcn.com/examples/authentication): Provide a platform for creating user accounts and authentication in a component library.
+- [Breadcrumb Component Documentation](https://ui.shadcn.com/docs/components/breadcrumb): Details the Breadcrumb component, its usage, installation, and examples for developers.
+- [Remix Installation Guide](https://ui.shadcn.com/docs/installation/remix): Instructions for installing and configuring shadcn/ui in a Remix project.
+- [Sheet Component Documentation](https://ui.shadcn.com/docs/components/sheet): To provide documentation and usage examples for the Sheet component in the Shadcn UI library.
+- [Input Component Documentation](https://ui.shadcn.com/docs/components/input): Provides documentation and examples for using the Input component in the shadcn UI framework.
+- [Badge Component Documentation](https://ui.shadcn.com/docs/components/badge): Guide for using the Badge component in a UI library.
+- [shadcn CLI Documentation](https://ui.shadcn.com/docs/cli): Guide users on using the shadcn CLI to manage components in their projects.
+- [Component Registry Documentation](https://ui.shadcn.com/docs/registry/registry-json): Provides documentation for creating a custom component registry using the registry.json schema.
+- [Dropdown Menu Documentation](https://ui.shadcn.com/docs/components/dropdown-menu): Provide documentation for implementing and using a dropdown menu component.
+- [Input OTP Component](https://ui.shadcn.com/docs/components/input-otp): This page details the Input OTP component for implementing one-time password functionality in applications.
+
+# 🛠️ To add a shadcn component to project:
+
+bunx shadcn-ui@latest add <component-name>
+
+# we have tailwind installed and lucide-icons
