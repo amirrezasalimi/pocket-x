@@ -355,6 +355,15 @@ Response:
     };
   };
 
+  const clearState = () => {
+    setMessages([]);
+    setActiveQueryId(null);
+    setResult(null);
+    setFilterValue({});
+    setQueryLoading(false);
+    setIsLoading(false);
+  };
+
   return {
     messages,
     activeQuery: messages.find((m) => m.id === activeQueryId)?.query || "",
@@ -382,6 +391,7 @@ Response:
     saveReport,
     loadReport,
     loadingReport,
+    clearState,
   };
 };
 

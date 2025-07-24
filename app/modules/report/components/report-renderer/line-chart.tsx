@@ -1,5 +1,5 @@
 import type { LineChartConfig } from "@/shared/types/report";
-import { CartesianGrid, Line, LineChart, XAxis } from "recharts";
+import { CartesianGrid, Legend, Line, LineChart, XAxis } from "recharts";
 import {
   ChartContainer,
   ChartTooltip,
@@ -23,6 +23,7 @@ const ReportLineChart = ({ config, data }: ReportRendererProps) => {
     <ChartContainer config={chartConfig} className="w-full h-full">
       <LineChart accessibilityLayer data={data}>
         <CartesianGrid vertical={false} />
+        <Legend />
         <XAxis
           dataKey={config.xAxis.key}
           tickLine={false}

@@ -235,6 +235,7 @@ export function ReportBuilderModal({
   // Load report when modal opens with an item
   React.useEffect(() => {
     if (open && item?.id) {
+      chat.clearState();
       // Load report and restore selected collections
       setLoadReportLoading(true);
       chat.loadReport(item.id).then((reportInfo) => {
@@ -266,6 +267,7 @@ export function ReportBuilderModal({
     } catch (error) {
       toast("Failed to save report");
     }
+    onOpenChange(false);
     setSaveReportLoading(false);
   };
 
