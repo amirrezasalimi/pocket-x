@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Check, ChevronsUpDown, Loader2 } from "lucide-react"; // Import Loader2 for spinner
 
 import { cn } from "@/shared/lib/utils"; // Adjust path as needed
 import { Button } from "@/shared/components/ui/button";
@@ -12,7 +12,7 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-  CommandSeparator, // Import CommandSeparator
+  CommandSeparator,
 } from "@/shared/components/ui/command";
 import {
   Popover,
@@ -35,10 +35,11 @@ interface ComboboxProps {
   emptyMessage?: string;
   inputPlaceholder?: string;
   allowCustomValue?: boolean;
+  isLoading?: boolean; // Add isLoading prop
   className?: string;
   popoverContentClassName?: string;
   inputClassName?: string;
-  listClassName?: string; // Add this to accept a class for the list
+  listClassName?: string;
 }
 
 export function Combobox({
@@ -49,10 +50,11 @@ export function Combobox({
   emptyMessage = "No options found.",
   inputPlaceholder = "Search options...",
   allowCustomValue = false,
+  isLoading = false, // Default isLoading to false
   className,
   popoverContentClassName,
   inputClassName,
-  listClassName, // Use the passed-in listClassName
+  listClassName,
 }: ComboboxProps) {
   const [open, setOpen] = React.useState(false);
   const [search, setSearch] = React.useState(value || ""); // Initialize search with current value
@@ -71,15 +73,19 @@ export function Combobox({
 
   // Filter options based on search value
   const filteredOptions = React.useMemo(() => {
+    if (isLoading) return []; // Don't show options while loading
     const lowerSearch = search.toLowerCase();
     return options.filter((option) =>
       option.label.toLowerCase().includes(lowerSearch)
     );
-  }, [search, options]);
+  }, [search, options, isLoading]);
 
   // Check if the current search value represents a potential custom value
   const isPotentialCustomValue =
-    allowCustomValue && search && !options.some((opt) => opt.value === search);
+    !isLoading && // Don't show custom value option while loading
+    allowCustomValue &&
+    search &&
+    !options.some((opt) => opt.value === search);
 
   return (
     <Popover open={open} onOpenChange={setOpen} modal>
@@ -94,9 +100,14 @@ export function Combobox({
             !value && "text-muted-foreground", // Style like default input when empty
             className
           )}
+          disabled={isLoading} // Disable the button while loading
         >
           {value ? selectedOption?.label || value : placeholder}
-          <ChevronsUpDown className="opacity-50 ml-2 w-4 h-4 shrink-0" />
+          {isLoading ? (
+            <Loader2 className="ml-2 w-4 h-4 animate-spin shrink-0" />
+          ) : (
+            <ChevronsUpDown className="opacity-50 ml-2 w-4 h-4 shrink-0" />
+          )}
         </Button>
       </PopoverTrigger>
       <PopoverContent
@@ -112,53 +123,58 @@ export function Combobox({
             value={search}
             onValueChange={setSearch} // Update internal search state
             className={cn("h-9", inputClassName)}
+            disabled={isLoading} // Disable input while loading
           />
           <CommandList
-            // Apply the scrollable styling here
-            className={cn(
-              "max-h-[200px] overflow-y-auto", // Adjust maxHeight as needed
-              listClassName
-            )}
+            className={cn("max-h-[200px] overflow-y-auto", listClassName)}
           >
-            <CommandEmpty>{emptyMessage}</CommandEmpty>
-            <CommandGroup>
-              {filteredOptions.map((option) => (
-                <CommandItem
-                  key={option.value}
-                  value={option.value}
-                  onSelect={() => handleSelect(option.value)}
-                  className="cursor-pointer"
-                >
-                  <Check
-                    className={cn(
-                      "mr-2 w-4 h-4",
-                      value === option.value ? "opacity-100" : "opacity-0"
-                    )}
-                  />
-                  {option.label}
-                </CommandItem>
-              ))}
-            </CommandGroup>
-
-            {/* Add Custom Value Item */}
-            {isPotentialCustomValue && (
+            {isLoading ? (
+              <div className="p-2 text-muted-foreground text-sm text-center">
+                Loading...
+              </div>
+            ) : (
               <>
-                <CommandSeparator />
+                <CommandEmpty>{emptyMessage}</CommandEmpty>
                 <CommandGroup>
-                  <CommandItem
-                    value={search} // Use the search term as the value
-                    onSelect={() => handleSelect(search)} // Select the custom value
-                    className="text-muted-foreground italic cursor-pointer"
-                  >
-                    <Check
-                      className={cn(
-                        "mr-2 w-4 h-4",
-                        value === search ? "opacity-100" : "opacity-0"
-                      )}
-                    />
-                    Add "{search}"
-                  </CommandItem>
+                  {filteredOptions.map((option) => (
+                    <CommandItem
+                      key={option.value}
+                      value={option.value}
+                      onSelect={() => handleSelect(option.value)}
+                      className="cursor-pointer"
+                    >
+                      <Check
+                        className={cn(
+                          "mr-2 w-4 h-4",
+                          value === option.value ? "opacity-100" : "opacity-0"
+                        )}
+                      />
+                      {option.label}
+                    </CommandItem>
+                  ))}
                 </CommandGroup>
+
+                {/* Add Custom Value Item */}
+                {isPotentialCustomValue && (
+                  <>
+                    <CommandSeparator />
+                    <CommandGroup>
+                      <CommandItem
+                        value={search} // Use the search term as the value
+                        onSelect={() => handleSelect(search)} // Select the custom value
+                        className="text-muted-foreground italic cursor-pointer"
+                      >
+                        <Check
+                          className={cn(
+                            "mr-2 w-4 h-4",
+                            value === search ? "opacity-100" : "opacity-0"
+                          )}
+                        />
+                        Add "{search}"
+                      </CommandItem>
+                    </CommandGroup>
+                  </>
+                )}
               </>
             )}
           </CommandList>

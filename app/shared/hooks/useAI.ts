@@ -10,7 +10,7 @@ export function useAI() {
   const [openAIInstance, setOpenAIInstance] = useState<OpenAI | null>(null);
   const [models, setModels] = useState<string[]>([]);
   const [loading, setLoading] = useState(false); // Added loading state
-
+  const [modelsLoading, setModelsLoading] = useState(false);
   const fetchAIInfo = async () => {
     if (!pb) return;
     try {
@@ -83,15 +83,29 @@ export function useAI() {
     }
   };
 
-  const getModels = async () => {
-    if (!openAIInstance) return;
+  const getModels = async (
+    apiKey: string = aiInfo.apiKey,
+    endpoint: string = aiInfo.endpoint
+  ) => {
+    if (!apiKey || !endpoint) {
+      console.warn("API Key or Endpoint is not set.");
+      return;
+    }
+    if (modelsLoading) return; // Prevent fetching models multiple times
+    setModelsLoading(true);
+    const oaiInstance = new OpenAI({
+      apiKey,
+      baseURL: endpoint,
+      dangerouslyAllowBrowser: true,
+    });
     try {
-      const response = await openAIInstance.models.list();
+      const response = await oaiInstance.models.list();
       const modelNames = response.data.map((model) => model.id);
       setModels(modelNames);
     } catch (error) {
       console.error("Error fetching models:", error);
     }
+    setModelsLoading(false); // Reset models loading state
   };
 
   return {
@@ -101,6 +115,7 @@ export function useAI() {
     fetchAIInfo,
     getModels,
     models,
-    loading, // Expose loading state
+    loading,
+    modelsLoading,
   };
 }

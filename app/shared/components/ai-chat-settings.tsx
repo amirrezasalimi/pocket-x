@@ -10,7 +10,7 @@ import { Input } from "@/shared/components/ui/input";
 import { Button } from "./ui/button";
 
 const AIChatSettings = ({ children }: { children?: React.ReactNode }) => {
-  const { aiInfo, saveAIInfo, getModels, models } = useAI();
+  const { aiInfo, saveAIInfo, getModels, models, modelsLoading } = useAI();
   const [endpoint, setEndpoint] = useState(aiInfo.endpoint);
   const [apiKey, setApiKey] = useState(aiInfo.apiKey);
   const [model, setModel] = useState(aiInfo.model);
@@ -23,8 +23,8 @@ const AIChatSettings = ({ children }: { children?: React.ReactNode }) => {
   }, [aiInfo]);
 
   useEffect(() => {
-    if (apiKey && endpoint) {
-      getModels();
+    if (apiKey || endpoint) {
+      getModels(apiKey, endpoint);
     }
   }, [apiKey, endpoint]);
 
@@ -68,6 +68,7 @@ const AIChatSettings = ({ children }: { children?: React.ReactNode }) => {
               Model
             </label>
             <Combobox
+              isLoading={modelsLoading}
               options={models.map((modelName) => ({
                 value: modelName,
                 label: modelName,
