@@ -58,7 +58,7 @@ export function ReportCard({ item, onSetup, isUpdating }: ReportCardProps) {
   // Handle refresh query
   const handleRefresh = async () => {
     if (item?.id && hasQuery) {
-      await chat.runQuery(item.id);
+      await chat.loadReport(item.id);
     }
   };
 

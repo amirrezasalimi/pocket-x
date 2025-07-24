@@ -9,7 +9,6 @@ import { Alert, AlertDescription } from "@/shared/components/ui/alert";
 import { AddReportItemDialog } from "./components/add-report-item-dialog";
 import { ReportCard } from "./components/report-card";
 import { ReportBuilderModal } from "./components/report-builder-modal";
-import AIChatSettings from "@/shared/components/ai-chat-settings";
 import type { ReportItem } from "@/shared/types/report";
 import type { Layout } from "react-grid-layout";
 
@@ -26,6 +25,7 @@ const Report = () => {
     updatingItemIds,
     createReportItem,
     updateReportItemLayout,
+    fetchReportItem,
   } = useReportItems(pb, id);
 
   const prevLayoutRef = useRef<Layout | null>(null);
@@ -152,7 +152,6 @@ const Report = () => {
 
   const handleSetupItem = (item: ReportItem) => {
     setBuilderItem(item);
-    console.log("ReportBuilderModal rendered", item);
   };
 
   // Convert report items to grid layout format
@@ -239,7 +238,10 @@ const Report = () => {
         item={builderItem}
         open={builderItem !== null}
         onOpenChange={(open) => {
-          if (!open) setBuilderItem(null);
+          if (!open) {
+            setBuilderItem(null);
+            fetchReportItem(builderItem?.id || "");
+          }
         }}
       />
     </div>

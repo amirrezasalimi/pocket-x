@@ -65,6 +65,30 @@ export function useReportItems(
     }
   };
 
+  const fetchReportItem = async (itemId: string) => {
+    if (!pb) return null;
+    // set updating state
+    setUpdatingItemIds((prev) => [...prev, itemId]);
+
+    try {
+      const record = await pb
+        .collection(COLLECTIONS.REPORT_ITEM)
+        .getOne(itemId);
+      // set record
+      setReportItems((prev) =>
+        prev.map((item) => (item.id === itemId ? { ...item, ...record } : item))
+      );
+      return record as unknown as ReportItem;
+    } catch (err) {
+      console.error("Error fetching report item:", err);
+      setError("Failed to fetch report item");
+      return null;
+    } finally {
+      // remove from updating state
+      setUpdatingItemIds((prev) => prev.filter((id) => id !== itemId));
+    }
+  };
+
   const createReportItem = async (title: string) => {
     if (!pb || !reportId) return;
 
@@ -140,13 +164,6 @@ export function useReportItems(
         const latestLayout = pendingUpdates.current.get(itemId);
         if (latestLayout) {
           try {
-            console.log(
-              "Debounced update for item:",
-              itemId,
-              "with layout",
-              latestLayout
-            );
-
             await updateReportItemLayout(itemId, latestLayout);
           } finally {
             // Clean up
@@ -194,6 +211,7 @@ export function useReportItems(
     createReportItem,
     updateReportItemLayout: debouncedUpdateLayout,
     updateReportItemsOrder,
-    refetch: fetchReportItems,
+    fetchReportItems,
+    fetchReportItem,
   };
 }
