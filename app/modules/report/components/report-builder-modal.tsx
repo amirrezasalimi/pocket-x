@@ -50,8 +50,6 @@ const RenderFilters = ({
   values: Record<string, any>;
   onChange: (key: string, value: any) => void;
 }) => {
-  console.log("filters_values", values);
-
   if (!filters || Object.keys(filters).length === 0) {
     return (
       <span className="text-muted-foreground text-xs">

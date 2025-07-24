@@ -60,8 +60,6 @@ const Collection = () => {
     window.location.href = "/";
   };
 
-  console.log("Collection component rendered for:", pb, collection);
-
   if (!pb || !collection) {
     return (
       <div className="flex justify-center items-center h-full">

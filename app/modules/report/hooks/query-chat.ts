@@ -48,9 +48,6 @@ const useQueryChat = ({
   const ai = useAI();
 
   const sendMessage = async (message: string) => {
-    console.log("collections", collections);
-    console.log("selectedReportType", selectedReportType);
-
     const collectionsDump = collections
       ?.map(
         (c) =>
@@ -152,8 +149,6 @@ interface Response {
 Response:
 `;
     if (ai.loading || !ai.openAIInstance) return;
-
-    console.log("Sending message to AI:", prompt);
 
     setIsLoading(true);
     const response = await ai.openAIInstance.chat.completions.create({

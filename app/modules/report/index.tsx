@@ -67,15 +67,6 @@ const Report = () => {
       const prevLayout = prevLayoutRef.current;
       prevLayoutRef.current = null;
 
-      console.log(
-        "Resizing item:",
-        reportItem.id,
-        "from",
-        prevLayout,
-        "to",
-        newLayout
-      );
-
       if (
         !prevLayout ||
         prevLayout.w !== newLayout.w ||

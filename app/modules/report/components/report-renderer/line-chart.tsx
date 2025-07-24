@@ -17,8 +17,6 @@ interface ReportRendererProps {
   data?: LineChartData; // Optional data prop for rendering
 }
 const ReportLineChart = ({ config, data }: ReportRendererProps) => {
-  console.log("Rendering LineChart with config:", config, data);
-
   const chartConfig: ChartConfig = {};
 
   return (
