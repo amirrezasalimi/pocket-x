@@ -5,8 +5,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/shared/components/ui/card";
-import { Settings } from "lucide-react";
+import { Settings, RefreshCw } from "lucide-react";
 import type { ReportItem } from "@/shared/types/report";
+import { useEffect, useState } from "react";
+import useQueryChat from "../hooks/query-chat";
+import { useAppProvider } from "@/shared/hooks/useAppProvider";
+import { ReportConfigs } from "@/shared/types/report";
+import ReportRenderer from "./report-renderer";
 
 interface ReportCardProps {
   item?: ReportItem;
@@ -15,7 +20,47 @@ interface ReportCardProps {
 }
 
 export function ReportCard({ item, onSetup, isUpdating }: ReportCardProps) {
+  const { pb } = useAppProvider();
+
   const hasElementType = Boolean(item?.element_type);
+  const hasQuery = Boolean(item?.data_query);
+
+  // Initialize query chat hook when we have an item with element type
+  const reportConfigData = item?.element_type
+    ? ReportConfigs[item.element_type as keyof typeof ReportConfigs]
+    : null;
+
+  const chat = useQueryChat({
+    pb: pb!,
+    reportConfigData: reportConfigData || { inputs: [] },
+    collections: [], // Will be populated when loading report
+    selectedReportType: item?.element_type || null,
+  });
+
+  // Load report data when item changes
+  const loadReportData = async () => {
+    if (item?.id && hasElementType) {
+      await chat.loadReport(item.id);
+    }
+  };
+  const itemKey = JSON.stringify(item);
+  useEffect(() => {
+    loadReportData();
+  }, [itemKey]);
+
+  // Handle settings click
+  const handleSettingsClick = () => {
+    if (item && hasElementType) {
+      onSetup?.(item);
+    }
+  };
+
+  // Handle refresh query
+  const handleRefresh = async () => {
+    if (item?.id && hasQuery) {
+      await chat.runQuery(item.id);
+    }
+  };
 
   if (!item) {
     return (
@@ -26,19 +71,44 @@ export function ReportCard({ item, onSetup, isUpdating }: ReportCardProps) {
   }
 
   return (
-    <Card className="relative w-full h-full">
+    <Card className="relative !gap-0 !m-0 !p-2 w-full h-full">
       {/* Loading spinner in top right */}
       {isUpdating && (
-        <div className="top-2 right-2 z-10 absolute">
+        <div className="right-4 bottom-4 z-10 absolute">
           <div className="border-2 border-muted-foreground border-t-transparent rounded-full w-4 h-4 animate-spin" />
         </div>
       )}
-      <CardHeader className="pb-2">
-        <CardTitle className="font-medium text-muted-foreground text-sm">
+
+      {/* Settings icon - only show when there's a query */}
+
+      <CardHeader className="!m-0 !p-0 h-6">
+        <CardTitle className="flex justify-between font-medium text-muted-foreground text-sm">
           {item.title}
+          {hasQuery && (
+            <div className="no-drag">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleRefresh}
+                className="p-1 w-6 h-6"
+                title="Refresh query"
+              >
+                <RefreshCw className="w-3 h-3" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleSettingsClick}
+                className="p-1 w-6 h-6"
+                title="Open settings"
+              >
+                <Settings className="w-3 h-3" />
+              </Button>
+            </div>
+          )}
         </CardTitle>
       </CardHeader>
-      <CardContent className="flex justify-center items-center h-full">
+      <CardContent className="flex justify-center items-center !p-0 h-[calc(100%_-_1.5rem)]">
         {!hasElementType ? (
           <div className="flex flex-col items-center gap-2">
             <Settings className="w-8 h-8 text-muted-foreground" />
@@ -56,12 +126,16 @@ export function ReportCard({ item, onSetup, isUpdating }: ReportCardProps) {
             </Button>
           </div>
         ) : (
-          <div className="flex justify-center items-center w-full h-full text-muted-foreground">
-            {/* Placeholder for actual element content */}
-            <div className="text-center">
-              <div className="font-medium">{item.element_type}</div>
-              <div className="text-xs">Element content will go here</div>
-            </div>
+          <div className="w-full h-full">
+            <ReportRenderer
+              isLoading={chat.queryLoading || chat.loadingReport}
+              item={{
+                ...item,
+                element_type: item.element_type!,
+                config: chat.result?.mapping,
+                cached_data: chat.result?.data,
+              }}
+            />
           </div>
         )}
       </CardContent>

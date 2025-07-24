@@ -99,3 +99,15 @@ export const ReportConfigs: Partial<Record<ReportType, ReportConfigData>> = {
 }
 
 */
+
+export interface FilterItem {
+  type: "text" | "num-range" | "select" | "multi-select";
+  label: string;
+  options?: {
+    value: string;
+    label: string;
+  }[]; // for select and multi-select
+  min?: number; // for num-range
+  max?: number; // for num-range
+  defaultValue?: string | string[]; // default value
+}

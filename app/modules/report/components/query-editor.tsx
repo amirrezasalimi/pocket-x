@@ -1,27 +1,9 @@
-import { RichTextarea, createRegexRenderer } from "rich-textarea";
-
-const jsonRenderer = createRegexRenderer([
-  // Strings (including keys) - light blue
-  [/"([^"\\]|\\.)*"/g, { color: "#0ea5e9", fontWeight: "normal" }],
-
-  // Numbers - orange
-  [/\b-?\d+\.?\d*([eE][+-]?\d+)?\b/g, { color: "#f97316" }],
-
-  // Booleans - purple
-  [/\b(true|false)\b/g, { color: "#a855f7", fontWeight: "bold" }],
-
-  // Null - red
-  [/\bnull\b/g, { color: "#ef4444", fontWeight: "bold" }],
-
-  // Brackets and braces - gray
-  [/[\[\]{}]/g, { color: "#6b7280", fontWeight: "bold" }],
-
-  // Colons and commas - gray
-  [/[,:]/g, { color: "#6b7280" }],
-
-  // Object keys (strings followed by colon) - green
-  [/"([^"\\]|\\.)*"(?=\s*:)/g, { color: "#10b981", fontWeight: "600" }],
-]);
+// QueryEditorPrism.jsx
+import { useEffect, useRef } from "react";
+import Prism from "prismjs";
+import "prismjs/components/prism-json"; // JSON grammar
+import "prismjs/plugins/line-numbers/prism-line-numbers.css";
+import "prismjs/themes/prism.css"; // use light Prism theme
 
 interface QueryEditorProps {
   value?: string;
@@ -29,31 +11,88 @@ interface QueryEditorProps {
   placeholder?: string;
 }
 
-const QueryEditor = ({
-  value,
+const QueryEditorPrism = ({
+  value = "",
   readOnly = false,
   placeholder = "Enter your JSON query here...",
 }: QueryEditorProps) => {
+  const codeRef = useRef<HTMLElement>(null);
+
+  // Re-highlight whenever `value` changes
+  useEffect(() => {
+    if (codeRef.current) {
+      codeRef.current.textContent = value;
+      Prism.highlightElement(codeRef.current);
+    }
+  }, [value]);
+
   return (
-    <RichTextarea
-      value={value}
-      readOnly={readOnly}
-      placeholder={placeholder}
+    <div
       style={{
+        position: "relative",
         width: "100%",
         height: "100%",
         fontFamily:
           "ui-monospace, SFMono-Regular, 'SF Mono', Consolas, 'Liberation Mono', Menlo, monospace",
         border: "1px solid #e5e7eb",
         borderRadius: "6px",
-        resize: "none",
-        outline: "none",
+        overflow: "auto",
+        background: "#f5f5f5", // match Prism light theme
       }}
-      spellCheck={false}
     >
-      {jsonRenderer}
-    </RichTextarea>
+      <pre
+        className={`line-numbers language-json${readOnly ? "" : ""}`}
+        style={{
+          margin: 0,
+          padding: "1rem",
+          whiteSpace: "pre-wrap",
+          wordBreak: "break-all",
+        }}
+      >
+        <code
+          ref={codeRef}
+          className="language-json"
+          // initial content
+          dangerouslySetInnerHTML={{
+            __html: Prism.highlight(value, Prism.languages.json, "json"),
+          }}
+        />
+      </pre>
+      {/* Overlay a textarea for editing */}
+      {!readOnly && (
+        <textarea
+          value={value}
+          placeholder={placeholder}
+          spellCheck={false}
+          onChange={(e) => {
+            const txt = e.target.value;
+            if (codeRef.current) {
+              codeRef.current.textContent = txt;
+              Prism.highlightElement(codeRef.current);
+            }
+          }}
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            background: "transparent",
+            color: "transparent",
+            caretColor: "#333",
+            border: "none",
+            resize: "none",
+            padding: "1rem",
+            fontFamily:
+              "ui-monospace, SFMono-Regular, 'SF Mono', Consolas, 'Liberation Mono', Menlo, monospace",
+            whiteSpace: "pre-wrap",
+            overflow: "hidden",
+            outline: "none",
+          }}
+        />
+      )}
+    </div>
   );
 };
 
-export default QueryEditor;
+export default QueryEditorPrism;

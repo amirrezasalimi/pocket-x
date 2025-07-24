@@ -52,6 +52,7 @@ export function useReportItems(
         collectionId: record.collectionId,
         collectionName: record.collectionName,
         expand: record.expand,
+        ...(record as unknown as any),
       })) as ReportItem[];
 
       setReportItems(items);
@@ -105,7 +106,7 @@ export function useReportItems(
 
       try {
         await pb.collection(COLLECTIONS.REPORT_ITEM).update(itemId, {
-          size: layout,
+          layout,
         });
       } catch (err) {
         console.error("Error updating report item layout:", err);
@@ -139,6 +140,13 @@ export function useReportItems(
         const latestLayout = pendingUpdates.current.get(itemId);
         if (latestLayout) {
           try {
+            console.log(
+              "Debounced update for item:",
+              itemId,
+              "with layout",
+              latestLayout
+            );
+
             await updateReportItemLayout(itemId, latestLayout);
           } finally {
             // Clean up
