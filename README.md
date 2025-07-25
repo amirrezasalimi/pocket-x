@@ -1,4 +1,4 @@
-![Pocket-x Logo](logo.png)
+<img src="logo.png" alt="Pocket-x Logo" width="200"/>
 
 # pocket x
 
