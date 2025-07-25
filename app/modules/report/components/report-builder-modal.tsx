@@ -399,7 +399,7 @@ export function ReportBuilderModal({
                   onChange={(e) => setReportName(e.target.value)}
                 />
                 <div className="h-[content]">
-                  {item && pb && (
+                  {item && pb && chat.activeQuery && (
                     <ReportRenderer
                       isLoading={chat.queryLoading}
                       item={{
