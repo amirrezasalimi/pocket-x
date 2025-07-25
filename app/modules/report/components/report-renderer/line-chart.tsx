@@ -1,4 +1,4 @@
-import type { LineChartConfig } from "@/shared/types/report";
+import type { LineChartConfig, ReportItemConfig } from "@/shared/types/report";
 import { CartesianGrid, Legend, Line, LineChart, XAxis } from "recharts";
 import {
   ChartContainer,
@@ -11,13 +11,13 @@ type LineChartData = {
   [key: string]: any;
 }[];
 
-const colors = [];
 interface ReportRendererProps {
-  config: LineChartConfig;
+  config: ReportItemConfig;
   data?: LineChartData; // Optional data prop for rendering
 }
 const ReportLineChart = ({ config, data }: ReportRendererProps) => {
   const chartConfig: ChartConfig = {};
+  const mapping = config.mapping as LineChartConfig;
 
   return (
     <ChartContainer config={chartConfig} className="w-full h-full">
@@ -25,13 +25,13 @@ const ReportLineChart = ({ config, data }: ReportRendererProps) => {
         <CartesianGrid vertical={false} />
         <Legend />
         <XAxis
-          dataKey={config.xAxis.key}
+          dataKey={mapping.xAxis.key}
           tickLine={false}
           axisLine={false}
           tickMargin={8}
         />
         <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-        {config.dataset.map((dataset, index) => (
+        {mapping.dataset.map((dataset, index) => (
           <Line
             key={index}
             dataKey={dataset.key}

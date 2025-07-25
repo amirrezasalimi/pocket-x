@@ -7,7 +7,7 @@ import {
 } from "@/shared/components/ui/card";
 import { Settings, RefreshCw } from "lucide-react";
 import type { ReportItem } from "@/shared/types/report";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import useQueryChat from "../hooks/query-chat";
 import { useAppProvider } from "@/shared/hooks/useAppProvider";
 import { ReportConfigs } from "@/shared/types/report";
@@ -132,7 +132,11 @@ export function ReportCard({ item, onSetup, isUpdating }: ReportCardProps) {
               item={{
                 ...item,
                 element_type: item.element_type!,
-                config: chat.result?.mapping,
+                config: {
+                  filters: chat.result?.filters || {},
+                  filters_values: chat.filterValue || {},
+                  mapping: chat.result?.mapping || {},
+                },
                 cached_data: chat.result?.data,
               }}
             />

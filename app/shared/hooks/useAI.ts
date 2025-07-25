@@ -45,7 +45,7 @@ export function useAI() {
       setOpenAIInstance(configuration);
       setLoading(false); // Set loading to false after initialization
     }
-  }, [aiInfo.model]);
+  }, [aiInfo.model, aiInfo.apiKey, aiInfo.endpoint]);
 
   const saveAIInfo = async (
     endpoint: string,

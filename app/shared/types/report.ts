@@ -21,11 +21,17 @@ export interface Report {
   updated: string;
 }
 
+export interface ReportItemConfig {
+  filters: Record<string, FilterItem>;
+  mapping: Record<string, any>;
+  filters_values: Record<string, any>;
+}
+
 export interface ReportItem {
   id: string;
   title: string;
   element_type?: ReportType;
-  config?: any;
+  config?: ReportItemConfig;
   cached_data?: any;
   cache_seconds?: number;
   last_cache?: string;

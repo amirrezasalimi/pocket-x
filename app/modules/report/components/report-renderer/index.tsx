@@ -1,6 +1,5 @@
 import { ReportType, type ReportItem } from "@/shared/types/report";
 import { type ComponentType } from "react";
-import Pocketbase from "pocketbase";
 import ReportLineChart from "./line-chart";
 import { Loader2 } from "lucide-react";
 
@@ -24,7 +23,8 @@ const ReportRenderer = ({ item, isLoading }: ReportRendererProps) => {
 
   const data = item.cached_data;
   const config = item.config;
-  const noData = (!data || !config) && !isLoading;
+  const mapping = config?.mapping || {};
+  const noData = (!data || Object.keys(mapping).length == 0) && !isLoading;
   if (noData) {
     return (
       <div className="flex justify-center items-center bg-gray-200 rounded-lg w-full h-full">

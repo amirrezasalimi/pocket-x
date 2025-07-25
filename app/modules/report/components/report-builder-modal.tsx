@@ -27,118 +27,19 @@ import {
 } from "@/shared/components/ui/select";
 import ReportRenderer from "./report-renderer";
 import { ReportConfigs } from "@/shared/types/report";
-import { Loader, Settings } from "lucide-react";
+import { Check, Loader, Play, Settings, Trash2 } from "lucide-react";
 import { Textarea } from "@/shared/components/ui/textarea";
 import useQueryChat from "../hooks/query-chat";
 import AIChatSettings from "@/shared/components/ai-chat-settings";
 import { Button } from "@/shared/components/ui/button";
 import QueryEditor from "./query-editor";
 import { toast } from "sonner";
+import ReportFilters from "./report-filters";
 
 type ReportBuilderModalProps = {
   item: ReportItem | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-};
-
-const RenderFilters = ({
-  filters,
-  values,
-  onChange,
-}: {
-  filters: Record<string, FilterItem>;
-  values: Record<string, any>;
-  onChange: (key: string, value: any) => void;
-}) => {
-  if (!filters || Object.keys(filters).length === 0) {
-    return (
-      <span className="text-muted-foreground text-xs">
-        No filters available.
-      </span>
-    );
-  }
-  return (
-    <div className="flex flex-col gap-2">
-      {Object.entries(filters).map(([key, filter]) => {
-        switch (filter.type) {
-          case "text":
-            return (
-              <div key={key} className="flex flex-col gap-1">
-                <label className="font-medium text-xs">{filter.label}</label>
-                <Input
-                  type="text"
-                  value={values[key] ?? filter.defaultValue ?? ""}
-                  onChange={(e) => onChange(key, e.target.value)}
-                  className="h-8"
-                />
-              </div>
-            );
-          case "num-range":
-            return (
-              <div key={key} className="flex flex-col gap-1">
-                <label className="font-medium text-xs">{filter.label}</label>
-                <div className="flex gap-2">
-                  <Input
-                    type="number"
-                    placeholder="Min"
-                    value={values[key + ".min"] ?? filter.min ?? ""}
-                    onChange={(e) => onChange(key + ".min", e.target.value)}
-                    className="h-8"
-                  />
-                  <Input
-                    type="number"
-                    placeholder="Max"
-                    value={values[key + ".max"] ?? filter.max ?? ""}
-                    onChange={(e) => onChange(key + ".max", e.target.value)}
-                    className="h-8"
-                  />
-                </div>
-              </div>
-            );
-          case "select":
-            return (
-              <div key={key} className="flex flex-col gap-1">
-                <label className="font-medium text-xs">{filter.label}</label>
-                <Select
-                  value={values[key] ?? undefined}
-                  onValueChange={(val) => onChange(key, val)}
-                >
-                  <SelectTrigger className="w-full h-8">
-                    <SelectValue placeholder="Select option" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {filter.options?.map((opt) => (
-                      <SelectItem key={opt.value} value={opt.value}>
-                        {opt.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            );
-          case "multi-select":
-            // You may want to use a custom multi-select component here
-            return (
-              <div key={key} className="flex flex-col gap-1">
-                <label className="font-medium text-xs">{filter.label}</label>
-                {/* Replace with your multi-select UI as needed */}
-                <Input
-                  type="text"
-                  value={
-                    Array.isArray(values[key]) ? values[key].join(", ") : ""
-                  }
-                  readOnly
-                  className="bg-muted h-8 cursor-pointer"
-                  onClick={() => {}}
-                />
-              </div>
-            );
-          default:
-            return null;
-        }
-      })}
-    </div>
-  );
 };
 
 export function ReportBuilderModal({
@@ -359,7 +260,7 @@ export function ReportBuilderModal({
                     Filters (auto generated)
                   </span>
                   <div className="flex flex-col gap-2">
-                    <RenderFilters
+                    <ReportFilters
                       filters={chat.result?.filters ?? {}}
                       values={chat.filterValue}
                       onChange={(key, value) => {
@@ -368,20 +269,6 @@ export function ReportBuilderModal({
                     />
                   </div>
                 </div>
-
-                {/* Render ReportConfigs inputs for selectedType */}
-                {false &&
-                  selectedChartType &&
-                  (() => {
-                    if (!reportConfigData?.inputs) return null;
-                    return (
-                      <div className="space-y-4 mt-6 pt-4 border-t">
-                        <span className="block mb-2 text-muted-foreground text-sm">
-                          Required fields
-                        </span>
-                      </div>
-                    );
-                  })()}
               </div>
             </div>
             {/* Middle: Query Assistant */}
@@ -392,61 +279,97 @@ export function ReportBuilderModal({
                   <span className="font-semibold text-gray-700 text-sm">
                     Query Assistant
                   </span>
-                  <AIChatSettings>
+                  <AIChatSettings
+                    onStatusChange={(ok) => {
+                      if (ok) {
+                        chat.ai.fetchAIInfo();
+                      }
+                    }}
+                  >
                     <Settings className="ml-auto w-5 h-5 text-gray-600 hover:text-gray-800 transition-colors cursor-pointer" />
                   </AIChatSettings>
                 </div>
-                <div className="flex flex-col flex-1 space-y-3 p-2 overflow-y-auto">
-                  {chat.messages.length === 0 ? (
-                    <div className="flex flex-col justify-center items-center w-full h-full text-center">
-                      <p className="text-gray-500 text-sm">
-                        Ask me anything about your report...
+                <div className="relative flex flex-col flex-1 p-2 overflow-y-auto">
+                  {!chat.aiInitialized && (
+                    <div className="flex justify-center items-center">
+                      <p className="mb-2 text-red-500 text-sm">
+                        AI is not initialized. Please check your settings.
                       </p>
                     </div>
-                  ) : (
-                    chat.messages.map((msg, index) => (
-                      <div
-                        key={index}
-                        className={cn(
-                          "p-3 rounded-md",
-                          msg.role === "user"
-                            ? "bg-blue-100 text-blue-800"
-                            : "bg-gray-100 text-gray-800"
-                        )}
-                      >
-                        <span className="font-semibold">
-                          {msg.role === "user" ? "You: " : "AI: "}
-                        </span>
-                        {msg.role === "user" ? (
-                          msg.content
-                        ) : (
-                          <div className="mt-2">
-                            <Button
-                              className={cn(
-                                "px-3 py-1 rounded-md text-sm",
-                                chat.activeQueryId === msg.id
-                                  ? "bg-blue-500 text-white"
-                                  : "bg-gray-200 text-gray-800 hover:bg-gray-300"
-                              )}
-                              onClick={() => {
-                                chat.runQuery(msg.id || "");
-                              }}
-                            >
-                              {chat.activeQueryId === msg.id
-                                ? "Active Query"
-                                : "Run Query"}
-                              {chat.activeQueryId === msg.id &&
-                                chat.queryLoading && (
-                                  <Loader className="ml-2 w-4 h-4 animate-spin" />
-                                )}
-                            </Button>
-                          </div>
-                        )}
-                      </div>
-                    ))
                   )}
+                  {!loadReportLoading &&
+                    (chat.messages.length === 0 ? (
+                      <div className="flex flex-col justify-center items-center w-full h-full text-center">
+                        <p className="text-gray-500 text-sm">
+                          Ask me anything about your report...
+                        </p>
+                      </div>
+                    ) : (
+                      chat.messages.map((msg, index) => (
+                        <div
+                          key={index}
+                          className={cn(
+                            "flex flex-col items-start",
+                            msg.role === "user"
+                              ? "items-end mt-8 group"
+                              : "items-start"
+                          )}
+                        >
+                          <div
+                            className={cn(
+                              "relative rounded-lg text-gray-800",
+                              msg.role === "user"
+                                ? "bg-gray-200  p-3  text-left w-[70%]"
+                                : "text-gray-800"
+                            )}
+                          >
+                            <Trash2
+                              onClick={() => chat.removeMessage(msg.id || "")}
+                              className="right-2 bottom-2 absolute opacity-0 group-hover:opacity-100 w-4 h-4 text-gray-500 hover:text-gray-700 transition-opacity cursor-pointer"
+                            />
+                            {msg.role === "user" ? (
+                              msg.content
+                            ) : (
+                              <div className="flex flex-col gap-2 mt-4">
+                                <span className="text-sm">
+                                  Here is your query:
+                                </span>
+                                <Button
+                                  className={cn(
+                                    "flex gap-2 px-3 py-1 rounded-md text-sm",
+                                    chat.activeQueryId === msg.id
+                                      ? "bg-blue-500 text-white hover:bg-blue-600"
+                                      : "border-1 border-gray-900 bg-white text-gray-800 hover:bg-gray-300"
+                                  )}
+                                  onClick={() => {
+                                    chat.runQuery(msg.id || "");
+                                  }}
+                                >
+                                  <span>
+                                    {chat.activeQueryId === msg.id
+                                      ? "Active Query"
+                                      : "Run Query"}
+                                  </span>
+                                  {chat.activeQueryId === msg.id &&
+                                    chat.queryLoading && (
+                                      <Loader className="w-4 h-4 animate-spin" />
+                                    )}
+                                  {!chat.queryLoading &&
+                                    chat.activeQueryId === msg.id && (
+                                      <Check className="w-4 h-4" />
+                                    )}
+                                  {chat.activeQueryId !== msg.id && (
+                                    <Play className="w-4 h-4" />
+                                  )}
+                                </Button>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      ))
+                    ))}
                   {chat.isLoading && (
-                    <div className="flex justify-center items-center w-full h-full">
+                    <div className="bottom-0 sticky flex justify-center items-center w-full h-32">
                       <div className="border-gray-900 border-b-2 rounded-full w-8 h-8 animate-spin"></div>
                     </div>
                   )}
@@ -482,7 +405,11 @@ export function ReportBuilderModal({
                       item={{
                         ...item,
                         element_type: selectedChartType as ReportType,
-                        config: chat.result?.mapping,
+                        config: {
+                          filters: chat.result?.filters || {},
+                          filters_values: chat.filterValue || {},
+                          mapping: chat.result?.mapping || {},
+                        },
                         cached_data: chat.result?.data,
                       }}
                     />

@@ -10,6 +10,7 @@ import { useState } from "react";
 import { jsonrepair } from "jsonrepair";
 import { nanoid } from "nanoid";
 import { COLLECTIONS } from "@/shared/constants";
+import { toast } from "sonner";
 
 interface Message {
   id?: string;
@@ -48,6 +49,19 @@ const useQueryChat = ({
   const ai = useAI();
 
   const sendMessage = async (message: string) => {
+    if (!ai.openAIInstance) {
+      toast.error("AI is not initialized. Please check your settings.");
+      return;
+    }
+    setMessages((prev) => [
+      ...prev,
+      {
+        id: nanoid(),
+        role: "user",
+        content: message,
+      },
+    ]);
+
     const collectionsDump = collections
       ?.map(
         (c) =>
@@ -187,7 +201,6 @@ Response:
       const id = nanoid();
       setMessages((prev) => [
         ...prev,
-        { role: "user", content: message },
         {
           id,
           role: "assistant",
@@ -219,6 +232,51 @@ Response:
       });
     }
     setIsLoading(false);
+  };
+
+  const removeMessage = (id: string) => {
+    // 1. Build the new list in one go
+    const index = messages.findIndex((m) => m.id === id);
+    if (index === -1) return;
+
+    // Make a mutable copy
+    const newMessages = [...messages];
+
+    // If it’s a user message, and the next one is the assistant’s, drop both
+    if (
+      newMessages[index].role === "user" &&
+      newMessages[index + 1]?.role === "assistant"
+    ) {
+      newMessages.splice(index, 2);
+    } else {
+      // Otherwise just remove that one message
+      newMessages.splice(index, 1);
+    }
+
+    // 2. Immediately update state with that fresh array
+    setMessages(newMessages);
+
+    // 3. If we nuked the active query, reset all the UI bits
+    if (activeQueryId === id) {
+      setActiveQueryId(null);
+      setResult(null);
+      setFilterValue({});
+      setQueryLoading(false);
+    }
+
+    const lastAssistant = [...newMessages]
+      .reverse()
+      .find((m) => m.role === "assistant" && m.query && m.mapping);
+
+    if (lastAssistant && lastAssistant.query && lastAssistant.mapping) {
+      runQuery({
+        id: lastAssistant.id!,
+        query: lastAssistant.query,
+        mapping: lastAssistant.mapping,
+        filters: lastAssistant.filters,
+        filterDefaults: { ...filterValue, ...lastAssistant.filters },
+      });
+    }
   };
 
   const runQuery = async ({
@@ -392,6 +450,8 @@ Response:
     loadReport,
     loadingReport,
     clearState,
+    removeMessage,
+    aiInitialized: ai.openAIInstance !== null,
   };
 };
 

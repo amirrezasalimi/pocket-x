@@ -9,12 +9,19 @@ import { Combobox } from "@/shared/components/ui/combobox";
 import { Input } from "@/shared/components/ui/input";
 import { Button } from "./ui/button";
 
-const AIChatSettings = ({ children }: { children?: React.ReactNode }) => {
+const AIChatSettings = ({
+  children,
+  onStatusChange,
+}: {
+  children?: React.ReactNode;
+  onStatusChange(ok: boolean): void;
+}) => {
   const { aiInfo, saveAIInfo, getModels, models, modelsLoading } = useAI();
   const [endpoint, setEndpoint] = useState(aiInfo.endpoint);
   const [apiKey, setApiKey] = useState(aiInfo.apiKey);
   const [model, setModel] = useState(aiInfo.model);
   const [isSaving, setIsSaving] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     setEndpoint(aiInfo.endpoint);
@@ -30,12 +37,21 @@ const AIChatSettings = ({ children }: { children?: React.ReactNode }) => {
 
   const handleSave = async () => {
     setIsSaving(true);
-    await saveAIInfo(endpoint, apiKey, model);
-    setIsSaving(false);
+    saveAIInfo(endpoint, apiKey, model)
+      .then(() => {
+        onStatusChange(true);
+      })
+      .catch(() => {
+        onStatusChange(false);
+      })
+      .finally(() => {
+        setIsSaving(false);
+        setIsOpen(false);
+      });
   };
 
   return (
-    <Popover>
+    <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger>
         {children || <button className="btn">AI Settings</button>}
       </PopoverTrigger>
