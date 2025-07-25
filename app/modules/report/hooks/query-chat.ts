@@ -54,6 +54,12 @@ const useQueryChat = ({
       toast.error("AI is not initialized. Please check your settings.");
       return;
     }
+
+    if (collections?.length === 0) {
+      toast.warning("Add some collections to generate queries.");
+      return;
+    }
+
     setMessages((prev) => [
       ...prev,
       {
