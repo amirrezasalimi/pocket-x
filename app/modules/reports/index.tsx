@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useAppProvider } from "@/shared/hooks/useAppProvider";
 import { useSetupStatus } from "@/shared/hooks/useSetupStatus";
-import { useReports } from "./hooks/useReports";
-import { ReportDialog } from "./components/ReportDialog";
+import { useReports } from "./hooks/reports";
+import { ReportDialog } from "./components/report-dialog";
 import { Button } from "@/shared/components/ui/button";
 import {
   Card,
@@ -24,6 +24,7 @@ import { Skeleton } from "@/shared/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/shared/components/ui/alert";
 import type { Report } from "@/shared/types/report";
 import { Plus, Edit2, Trash2, GripVertical } from "lucide-react";
+import { useReportsStoreHook } from "src/shared/hooks/report-store-hook";
 
 export default function ReportsPage() {
   const { pb } = useAppProvider();
@@ -36,7 +37,7 @@ export default function ReportsPage() {
     updateReport,
     deleteReport,
     reorderReports,
-  } = useReports(pb);
+  } = useReportsStoreHook(pb);
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingReport, setEditingReport] = useState<Report | undefined>();

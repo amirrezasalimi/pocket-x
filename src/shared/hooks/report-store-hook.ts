@@ -1,28 +1,39 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import PocketBase from "pocketbase";
 import { COLLECTIONS } from "@/shared/constants";
 import type { Report } from "@/shared/types/report";
+import { useReportsStore } from "../store/reports-store";
 
-export function useReports(pb: PocketBase | null) {
-  const [reports, setReports] = useState<Report[]>([]);
-  const [isLoading, setIsLoading] = useState(false); // Start with false instead of true
-  const [error, setError] = useState<string | null>(null);
+export function useReportsStoreHook(pb: PocketBase | null) {
+  const {
+    reports,
+    isLoading,
+    error,
+    setReports,
+    addReport,
+    updateReport,
+    removeReport,
+    setLoading,
+    setError,
+  } = useReportsStore();
 
   const fetchReports = async () => {
     if (!pb) return;
 
     try {
-      setIsLoading(true);
+      setLoading(true);
       setError(null);
+
       const records = await pb.collection(COLLECTIONS.REPORTS).getFullList({
         sort: "order,created",
       });
+
       setReports(records as unknown as Report[]);
     } catch (err) {
       console.error("Error fetching reports:", err);
       setError("Failed to fetch reports");
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
@@ -32,7 +43,7 @@ export function useReports(pb: PocketBase | null) {
     try {
       // Get the highest order number and add 1
       const maxOrder = reports.reduce(
-        (max, report) => Math.max(max, report.order || 0),
+        (max: number, report: Report) => Math.max(max, report.order || 0),
         0
       );
 
@@ -42,9 +53,7 @@ export function useReports(pb: PocketBase | null) {
         color: data.color || "#3b82f6",
       });
 
-      setReports((prev) =>
-        [...prev, record as unknown as Report].sort((a, b) => a.order - b.order)
-      );
+      addReport(record as unknown as Report);
       return record as unknown as Report;
     } catch (err) {
       console.error("Error creating report:", err);
@@ -53,16 +62,12 @@ export function useReports(pb: PocketBase | null) {
     }
   };
 
-  const updateReport = async (id: string, data: Partial<Report>) => {
+  const updateReportData = async (id: string, data: Partial<Report>) => {
     if (!pb) return;
 
     try {
       const record = await pb.collection(COLLECTIONS.REPORTS).update(id, data);
-      setReports((prev) =>
-        prev
-          .map((r) => (r.id === id ? (record as unknown as Report) : r))
-          .sort((a, b) => a.order - b.order)
-      );
+      updateReport(id, record as unknown as Report);
       return record as unknown as Report;
     } catch (err) {
       console.error("Error updating report:", err);
@@ -76,7 +81,7 @@ export function useReports(pb: PocketBase | null) {
 
     try {
       await pb.collection(COLLECTIONS.REPORTS).delete(id);
-      setReports((prev) => prev.filter((r) => r.id !== id));
+      removeReport(id);
     } catch (err) {
       console.error("Error deleting report:", err);
       setError("Failed to delete report");
@@ -96,6 +101,8 @@ export function useReports(pb: PocketBase | null) {
       );
 
       await Promise.all(promises);
+
+      // Update local state with new order
       setReports(
         reorderedReports.map((report, index) => ({
           ...report,
@@ -109,13 +116,14 @@ export function useReports(pb: PocketBase | null) {
     }
   };
 
+  // Auto-fetch reports when pb changes
   useEffect(() => {
     if (pb) {
       fetchReports();
     } else {
       // Reset state when pb becomes null
       setReports([]);
-      setIsLoading(false);
+      setLoading(false);
       setError(null);
     }
   }, [pb]);
@@ -125,7 +133,7 @@ export function useReports(pb: PocketBase | null) {
     isLoading,
     error,
     createReport,
-    updateReport,
+    updateReport: updateReportData,
     deleteReport,
     reorderReports,
     refetch: fetchReports,

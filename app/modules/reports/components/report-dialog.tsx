@@ -10,6 +10,8 @@ import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
 import { Label } from "@/shared/components/ui/label";
 import type { Report } from "@/shared/types/report";
+import { useReportsStoreHook } from "src/shared/hooks/report-store-hook";
+import { useAppProvider } from "@/shared/hooks/useAppProvider";
 
 interface ReportDialogProps {
   open: boolean;
@@ -27,6 +29,8 @@ export function ReportDialog({
   const [title, setTitle] = useState(report?.title || "");
   const [color, setColor] = useState(report?.color || "#3b82f6");
   const [isLoading, setIsLoading] = useState(false);
+  const { pb } = useAppProvider();
+  const reportStore = useReportsStoreHook(pb);
 
   // Sync state with report prop when it changes
   useEffect(() => {
@@ -43,6 +47,7 @@ export function ReportDialog({
       onOpenChange(false);
       setTitle("");
       setColor("#3b82f6");
+      reportStore.refetch();
     } catch (error) {
       console.error("Error saving report:", error);
     } finally {

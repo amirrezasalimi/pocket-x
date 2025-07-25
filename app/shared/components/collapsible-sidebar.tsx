@@ -26,8 +26,8 @@ import PocketBase from "pocketbase";
 import { useLocation, useNavigate } from "react-router";
 import { SetupPocketBasePlus } from "@/shared/components/setup-pocketbase-plus";
 import { useSetupStatus } from "@/shared/hooks/useSetupStatus";
-import { useReports } from "@/modules/reports/hooks/useReports";
 import type { Collection } from "../types/collection";
+import { useReportsStoreHook } from "src/shared/hooks/report-store-hook";
 
 interface CollapsibleSidebarProps {
   collections: Collection[];
@@ -53,7 +53,7 @@ export function CollapsibleSidebar({
   const location = useLocation();
   const pathname = location.pathname;
   const { isSetup, recheckSetup } = useSetupStatus(pb as PocketBase);
-  const { reports } = useReports(pb);
+  const { reports } = useReportsStoreHook(pb as PocketBase);
 
   const getCollectionIcon = (type: string) => {
     switch (type) {
