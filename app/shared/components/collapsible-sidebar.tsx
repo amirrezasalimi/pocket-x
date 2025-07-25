@@ -29,6 +29,7 @@ import { SetupPocketBasePlus } from "@/shared/components/setup-pocketbase-plus";
 import { useSetupStatus } from "@/shared/hooks/useSetupStatus";
 import type { Collection } from "../types/collection";
 import { useReportsStoreHook } from "src/shared/hooks/report-store-hook";
+import { ROUTES } from "@/shared/constants";
 
 interface CollapsibleSidebarProps {
   collections: Collection[];
@@ -118,13 +119,13 @@ export function CollapsibleSidebar({
     ...systemViewCollections,
   ];
 
-  const isDashboardActive = pathname === "/dashboard";
-  const isReportsActive = pathname === "/reports";
+  const isDashboardActive = pathname === ROUTES.DASHBOARD;
+  const isReportsActive = pathname === ROUTES.REPORTS;
 
   const renderCollectionButton = (collection: Collection) => {
     const Icon = getCollectionIcon(collection.type);
     const isPinned = pinnedCollections.includes(collection.id);
-    const isActive = pathname === `/c/${collection.name}`;
+    const isActive = pathname === ROUTES.COLLECTION(collection.name);
 
     if (isCollapsed) {
       return (
@@ -139,7 +140,7 @@ export function CollapsibleSidebar({
           )}
           onClick={() => {
             onSelectCollection(collection);
-            nav(`/c/${collection.name}`);
+            nav(ROUTES.COLLECTION(collection.name));
           }}
           title={collection.name}
         >
@@ -159,7 +160,7 @@ export function CollapsibleSidebar({
           )}
           onClick={() => {
             onSelectCollection(collection);
-            nav(`/c/${collection.name}`);
+            nav(ROUTES.COLLECTION(collection.name));
           }}
         >
           {/* <Icon className="mr-2 w-3 h-3 shrink-0" /> */}
@@ -229,7 +230,7 @@ export function CollapsibleSidebar({
                 isDashboardActive &&
                   "bg-blue-100 hover:bg-blue-200 dark:bg-blue-900/30 dark:hover:bg-blue-900/50"
               )}
-              onClick={() => nav("/dashboard")}
+              onClick={() => nav(ROUTES.DASHBOARD)}
               title="Dashboard"
             >
               <Home className="w-4 h-4" />
@@ -267,7 +268,7 @@ export function CollapsibleSidebar({
                     isDashboardActive &&
                       "bg-blue-100 hover:bg-blue-200 dark:bg-blue-900/30 dark:hover:bg-blue-900/50"
                   )}
-                  onClick={() => nav("/dashboard")}
+                  onClick={() => nav(ROUTES.DASHBOARD)}
                 >
                   <Home className="mr-2 w-3 h-3 shrink-0" />
                   <span className="truncate">Dashboard</span>
@@ -288,7 +289,7 @@ export function CollapsibleSidebar({
                     isReportsActive &&
                       "bg-blue-100 hover:bg-blue-200 dark:bg-blue-900/30 dark:hover:bg-blue-900/50"
                   )}
-                  onClick={() => nav("/reports")}
+                  onClick={() => nav(ROUTES.REPORTS)}
                 >
                   <FileText className="mr-2 w-3 h-3 shrink-0" />
                   <span className="truncate">Manage Reports</span>
@@ -301,7 +302,8 @@ export function CollapsibleSidebar({
                 {!isLoading && reports.length > 0 && (
                   <div className="pt-1 border-muted-foreground/20 border-t">
                     {reports.map((report) => {
-                      const isActive = pathname === `/reports/${report.id}`;
+                      const isActive =
+                        pathname === ROUTES.REPORT_DETAIL(report.id);
                       return (
                         <Button
                           key={report.id}
@@ -311,7 +313,7 @@ export function CollapsibleSidebar({
                             isActive &&
                               "bg-blue-100 hover:bg-blue-200 dark:bg-blue-900/30 dark:hover:bg-blue-900/50"
                           )}
-                          onClick={() => nav(`/reports/${report.id}`)}
+                          onClick={() => nav(ROUTES.REPORT_DETAIL(report.id))}
                         >
                           <div
                             className="mr-2 border rounded w-3 h-3 shrink-0"
