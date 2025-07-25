@@ -23,7 +23,7 @@ export function useCollectionQuery(
   const [queryResult, setQueryResult] = useState<QueryResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [filter, setFilter] = useState("");
-  const [sort, setSort] = useState("");
+  const [sort, setSort] = useState("-created");
   const [expand, setExpand] = useState("");
   const [selectedFields, setSelectedFields] = useState<string[]>([]);
   const [page, setPage] = useState<number>(DEFAULTS.PAGE);
