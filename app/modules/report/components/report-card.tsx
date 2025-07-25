@@ -12,6 +12,12 @@ import useQueryChat from "../hooks/query-chat";
 import { useAppProvider } from "@/shared/hooks/useAppProvider";
 import { ReportConfigs } from "@/shared/types/report";
 import ReportRenderer from "./report-renderer";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/shared/components/ui/popover";
+import ReportFilters from "./report-filters";
 
 interface ReportCardProps {
   item?: ReportItem;
@@ -40,7 +46,7 @@ export function ReportCard({ item, onSetup, isUpdating }: ReportCardProps) {
   // Load report data when item changes
   const loadReportData = async () => {
     if (item?.id && hasElementType) {
-      await chat.loadReport(item.id);
+      await chat.loadReport(item.id, true);
     }
   };
   const itemKey = JSON.stringify(item);
@@ -58,7 +64,7 @@ export function ReportCard({ item, onSetup, isUpdating }: ReportCardProps) {
   // Handle refresh query
   const handleRefresh = async () => {
     if (item?.id && hasQuery) {
-      await chat.loadReport(item.id);
+      await chat.loadReport(item.id, true);
     }
   };
 
@@ -81,11 +87,41 @@ export function ReportCard({ item, onSetup, isUpdating }: ReportCardProps) {
 
       {/* Settings icon - only show when there's a query */}
 
-      <CardHeader className="!m-0 !p-0 h-6">
-        <CardTitle className="flex justify-between font-medium text-muted-foreground text-sm">
-          {item.title}
+      <CardHeader className="!m-0 !p-0 h-7">
+        <CardTitle className="flex justify-between">
+          <div className="flex gap-2">
+            <span className="font-medium text-muted-foreground text-sm">
+              {item.title}
+            </span>
+            <div></div>
+          </div>
           {hasQuery && (
-            <div className="no-drag">
+            <div className="flex items-center gap-2 no-drag">
+              <Popover>
+                <PopoverTrigger>
+                  <Button className="bg-neutral-100 hover:bg-neutral-300 px-2 h-5 text-gray-950 hover:text-gray-900 text-xs no-drag">
+                    filters
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent>
+                  <ReportFilters
+                    filters={chat.result?.filters || {}}
+                    values={chat.filterValue || {}}
+                    onChange={(key, value) => {
+                      chat.updateFilter(key, value);
+                      chat
+                        .saveReportConfig(item.id, {
+                          filters_values: {
+                            ...chat.filterValue,
+                            [key]: value,
+                          },
+                        })
+                        .then(() => {});
+                    }}
+                  />
+                </PopoverContent>
+              </Popover>
+
               <Button
                 variant="ghost"
                 size="sm"
@@ -108,7 +144,7 @@ export function ReportCard({ item, onSetup, isUpdating }: ReportCardProps) {
           )}
         </CardTitle>
       </CardHeader>
-      <CardContent className="flex justify-center items-center !p-0 h-[calc(100%_-_1.5rem)]">
+      <CardContent className="flex justify-center items-center !p-0 h-[calc(100%_-_1.75rem)]">
         {!hasElementType ? (
           <div className="flex flex-col items-center gap-2">
             <Settings className="w-8 h-8 text-muted-foreground" />
@@ -133,6 +169,7 @@ export function ReportCard({ item, onSetup, isUpdating }: ReportCardProps) {
                 ...item,
                 element_type: item.element_type!,
                 config: {
+                  ...item.config,
                   filters: chat.result?.filters || {},
                   filters_values: chat.filterValue || {},
                   mapping: chat.result?.mapping || {},

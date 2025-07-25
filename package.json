@@ -24,6 +24,7 @@
     "@react-router/serve": "^7.5.3",
     "@types/lodash": "^4.17.20",
     "@types/prismjs": "^1.26.5",
+    "@uidotdev/usehooks": "^2.4.1",
     "class-variance-authority": "^0.7.1",
     "cmdk": "^1.1.1",
     "isbot": "^5.1.27",

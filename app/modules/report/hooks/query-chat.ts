@@ -3,6 +3,7 @@ import type { Collection } from "@/shared/types/collection";
 import type {
   FilterItem,
   ReportConfigData,
+  ReportItemConfig,
   ReportType,
 } from "@/shared/types/report";
 import Pocketbase from "pocketbase";
@@ -321,11 +322,10 @@ Response:
       ...prev,
       [key]: value,
     }));
-    console.log("Updated filter:", key, value);
     // run query with updated filter
     const message = messages.find((m) => m.id === activeQueryId);
     if (message?.query && message?.mapping) {
-      runQuery({
+      return runQuery({
         id: message.id || "",
         query: message.query,
         mapping: message.mapping,
@@ -336,6 +336,7 @@ Response:
         },
       });
     }
+    return Promise.reject();
   };
 
   // Save the current report state to PocketBase
@@ -374,32 +375,45 @@ Response:
   };
 
   // Load a report by ID and restore chat/query/filter/collection state
-  const loadReport = async (reportId: string) => {
+  const loadReport = async (reportId: string, _runQuery = false) => {
     if (!pb) throw new Error("PocketBase instance required");
     setLoadingReport(true);
     const loaded = await pb
       .collection(COLLECTIONS.REPORT_ITEM)
       .getOne(reportId);
+    const config = loaded.config as ReportItemConfig;
     // Restore chat state: create a synthetic assistant message
     const assistantMsg: Message = {
       id: loaded.id,
       role: "assistant",
       content: "",
       query: loaded.data_query,
-      mapping: loaded.config?.mapping,
-      filters: loaded.config?.filters,
+      mapping: config?.mapping,
+      filters: config?.filters,
     };
     if (assistantMsg.query) {
       setMessages([
         { role: "user", content: `Query for '${loaded.title}' chart.` },
         assistantMsg,
       ]);
-      setActiveQueryId(loaded.id);
-      setResult({
-        data: loaded.cached_data,
-        mapping: loaded.config?.mapping,
-        filters: loaded.config?.filters,
-      });
+
+      if (_runQuery) {
+        await runQuery({
+          id: loaded.id,
+          query: assistantMsg.query,
+          mapping: config?.mapping || {},
+          filters: config?.filters || {},
+          filterDefaults: config?.filters_values || {},
+        });
+      } else {
+        setActiveQueryId(loaded.id);
+        setResult({
+          data: loaded.cached_data,
+          mapping: config?.mapping,
+          filters: config?.filters,
+        });
+      }
+
       // Set filter values from saved config (filters_values)
       setFilterValue(loaded.config?.filters_values || {});
     }
@@ -409,7 +423,7 @@ Response:
     return {
       title: loaded.title,
       element_type: loaded.element_type,
-      selectedCollections: loaded.config?.selected_collections || [],
+      selectedCollections: config?.selected_collections || [],
     };
   };
 
@@ -420,6 +434,28 @@ Response:
     setFilterValue({});
     setQueryLoading(false);
     setIsLoading(false);
+  };
+
+  const saveReportConfig = async (
+    report_item_id: string,
+    config: Partial<ReportItemConfig>
+  ) => {
+    // load the existing report item
+    try {
+      const existingItem = await pb
+        .collection(COLLECTIONS.REPORT_ITEM)
+        .getOne(report_item_id);
+      // update the config
+      const updatedItem = {
+        config: {
+          ...existingItem.config,
+          ...config,
+        },
+      };
+      await pb
+        .collection(COLLECTIONS.REPORT_ITEM)
+        .update(report_item_id, updatedItem);
+    } catch (error) {}
   };
 
   return {
@@ -452,6 +488,7 @@ Response:
     clearState,
     removeMessage,
     aiInitialized: ai.openAIInstance !== null,
+    saveReportConfig,
   };
 };
 

@@ -25,6 +25,7 @@ export interface ReportItemConfig {
   filters: Record<string, FilterItem>;
   mapping: Record<string, any>;
   filters_values: Record<string, any>;
+  selected_collections?: string[];
 }
 
 export interface ReportItem {
