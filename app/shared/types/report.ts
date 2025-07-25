@@ -5,7 +5,11 @@ export enum ReportType {
   TABLE = "table",
   TEXT = "text",
 }
-export const REPORT_TYPES = Object.values(ReportType);
+export const AVAILABLE_REPORT_TYPES = [ReportType.LINE_CHART];
+
+export const REPORT_TYPES = Object.values(ReportType).filter((type) =>
+  AVAILABLE_REPORT_TYPES.includes(type as ReportType)
+) as ReportType[];
 
 export interface Report {
   id: string;
