@@ -74,6 +74,12 @@ export function SetupPocketBasePlus({
         isImporting: false,
         error: null,
       });
+      if (isSetup) {
+        // refresh
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      }
     } catch (error) {
       console.error("Error checking setup status:", error);
       setStatus((prev) => ({

@@ -27,11 +27,11 @@ export const ROUTES = {
   REPORT_DETAIL: (reportId: string) => `/reports/${reportId}`,
   COLLECTION: (collectionName: string) => `/c/${collectionName}`,
 } as const;
-
+export const COLLECTION_PREFIX = "px";
 export const COLLECTIONS = {
-  REPORTS: "pbp_reports",
-  REPORT_ITEM: "pbp_report_item",
-  CONFIG: "pbp_config",
+  REPORTS: `${COLLECTION_PREFIX}_reports`,
+  REPORT_ITEM: `${COLLECTION_PREFIX}_report_item`,
+  CONFIG: `${COLLECTION_PREFIX}_config`,
 };
 
 export const CONFIG_KEYS = {

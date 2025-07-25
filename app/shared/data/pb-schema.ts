@@ -6,7 +6,7 @@ export const DB_SCHEMA = [
     createRule: null,
     updateRule: null,
     deleteRule: null,
-    name: "pbp_reports",
+    name: "px_reports",
     type: "base",
     fields: [
       {
@@ -94,7 +94,7 @@ export const DB_SCHEMA = [
     createRule: null,
     updateRule: null,
     deleteRule: null,
-    name: "pbp_report_item",
+    name: "px_report_item",
     type: "base",
     fields: [
       {
@@ -252,7 +252,7 @@ export const DB_SCHEMA = [
         type: "autodate",
       },
     ],
-    indexes: ["CREATE INDEX `idx_Zs5MDywkJp` ON `pbp_report_item` (`report`)"],
+    indexes: ["CREATE INDEX `idx_Zs5MDywkJp` ON `px_report_item` (`report`)"],
     system: false,
   },
   {
@@ -262,7 +262,7 @@ export const DB_SCHEMA = [
     createRule: null,
     updateRule: null,
     deleteRule: null,
-    name: "pbp_config",
+    name: "px_config",
     type: "base",
     fields: [
       {
@@ -328,7 +328,7 @@ export const DB_SCHEMA = [
         type: "autodate",
       },
     ],
-    indexes: ["CREATE INDEX `idx_C3u2ElyaUl` ON `pbp_config` (`key`)"],
+    indexes: ["CREATE INDEX `idx_C3u2ElyaUl` ON `px_config` (`key`)"],
     system: false,
   },
 ];
