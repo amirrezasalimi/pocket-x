@@ -110,9 +110,14 @@ const Report = () => {
   // Show loading if app is still loading OR if report is loading
   if (appLoading || reportLoading) {
     return (
-      <div className="space-y-4 p-6">
-        <Skeleton className="w-64 h-8" />
-        <Skeleton className="w-full h-64" />
+      <div className="flex flex-col gap-8 p-8 h-full">
+        <Skeleton className="w-1/3 h-8" />
+        <div className="gap-6 grid grid-cols-2 h-full">
+          <Skeleton className="w-full h-full" />
+          <Skeleton className="w-full h-full" />
+          <Skeleton className="w-full h-full" />
+          <Skeleton className="w-full h-full" />
+        </div>
       </div>
     );
   }
