@@ -17,6 +17,7 @@ import {
   Settings,
   ChevronDown,
   ChevronUp,
+  Loader2,
 } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 import { Badge } from "@/shared/components/ui/badge";
@@ -53,8 +54,17 @@ export function CollapsibleSidebar({
   const location = useLocation();
   const pathname = location.pathname;
   const { isSetup, recheckSetup } = useSetupStatus(pb as PocketBase);
-  const { reports } = useReportsStoreHook(pb as PocketBase);
+  const {
+    reports,
+    isLoading,
+    refetch: referchReports,
+  } = useReportsStoreHook(pb as PocketBase);
 
+  useEffect(() => {
+    if (pb) {
+      referchReports();
+    }
+  }, [pb]);
   const getCollectionIcon = (type: string) => {
     switch (type) {
       case "auth":
@@ -120,9 +130,13 @@ export function CollapsibleSidebar({
       return (
         <Button
           key={collection.id}
-          variant={isActive ? "default" : "ghost"}
+          variant={isActive ? "secondary" : "ghost"}
           size="sm"
-          className="p-1 w-full h-8 font-mono text-xs"
+          className={cn(
+            "p-1 w-full h-8 font-mono text-xs",
+            isActive &&
+              "bg-blue-100 hover:bg-blue-200 dark:bg-blue-900/30 dark:hover:bg-blue-900/50"
+          )}
           onClick={() => {
             onSelectCollection(collection);
             nav(`/c/${collection.name}`);
@@ -137,8 +151,12 @@ export function CollapsibleSidebar({
     return (
       <div key={collection.id} className="group flex items-center gap-1">
         <Button
-          variant={isActive ? "default" : "ghost"}
-          className="flex-1 justify-start px-4 h-8 text-xs"
+          variant={isActive ? "secondary" : "ghost"}
+          className={cn(
+            "flex-1 justify-start px-4 h-8 text-xs",
+            isActive &&
+              "bg-blue-100 hover:bg-blue-200 dark:bg-blue-900/30 dark:hover:bg-blue-900/50"
+          )}
           onClick={() => {
             onSelectCollection(collection);
             nav(`/c/${collection.name}`);
@@ -204,9 +222,13 @@ export function CollapsibleSidebar({
         {isCollapsed ? (
           <div className="space-y-2 p-2">
             <Button
-              variant={isDashboardActive ? "default" : "ghost"}
+              variant={isDashboardActive ? "secondary" : "ghost"}
               size="sm"
-              className="p-0 w-full h-8"
+              className={cn(
+                "p-0 w-full h-8",
+                isDashboardActive &&
+                  "bg-blue-100 hover:bg-blue-200 dark:bg-blue-900/30 dark:hover:bg-blue-900/50"
+              )}
               onClick={() => nav("/dashboard")}
               title="Dashboard"
             >
@@ -239,8 +261,12 @@ export function CollapsibleSidebar({
               </div>
               <div className="space-y-1">
                 <Button
-                  variant={isDashboardActive ? "default" : "ghost"}
-                  className="justify-start px-2 w-full h-8 text-xs"
+                  variant={isDashboardActive ? "secondary" : "ghost"}
+                  className={cn(
+                    "justify-start px-2 w-full h-8 text-xs",
+                    isDashboardActive &&
+                      "bg-blue-100 hover:bg-blue-200 dark:bg-blue-900/30 dark:hover:bg-blue-900/50"
+                  )}
                   onClick={() => nav("/dashboard")}
                 >
                   <Home className="mr-2 w-3 h-3 shrink-0" />
@@ -256,29 +282,50 @@ export function CollapsibleSidebar({
               </div>
               <div className="space-y-1">
                 <Button
-                  variant={isReportsActive ? "default" : "ghost"}
-                  className="justify-start px-2 w-full h-8 text-xs"
+                  variant={isReportsActive ? "secondary" : "ghost"}
+                  className={cn(
+                    "justify-start px-2 w-full h-8 text-xs",
+                    isReportsActive &&
+                      "bg-blue-100 hover:bg-blue-200 dark:bg-blue-900/30 dark:hover:bg-blue-900/50"
+                  )}
                   onClick={() => nav("/reports")}
                 >
                   <FileText className="mr-2 w-3 h-3 shrink-0" />
                   <span className="truncate">Manage Reports</span>
                 </Button>
-                {reports.length > 0 && (
+                {isLoading && (
+                  <div className="flex justify-center items-center py-2">
+                    <Loader2 className="w-3 h-3 text-muted-foreground animate-spin" />
+                  </div>
+                )}
+                {!isLoading && reports.length > 0 && (
                   <div className="pt-1 border-muted-foreground/20 border-t">
-                    {reports.map((report) => (
-                      <Button
-                        key={report.id}
-                        variant="ghost"
-                        className="justify-start px-2 w-full h-8 text-xs"
-                        onClick={() => nav(`/reports/${report.id}`)}
-                      >
-                        <div
-                          className="mr-2 border rounded w-3 h-3 shrink-0"
-                          style={{ backgroundColor: report.color }}
-                        />
-                        <span className="truncate">{report.title}</span>
-                      </Button>
-                    ))}
+                    {reports.map((report) => {
+                      const isActive = pathname === `/reports/${report.id}`;
+                      return (
+                        <Button
+                          key={report.id}
+                          variant={isActive ? "secondary" : "ghost"}
+                          className={cn(
+                            "justify-start px-2 w-full h-8 text-xs",
+                            isActive &&
+                              "bg-blue-100 hover:bg-blue-200 dark:bg-blue-900/30 dark:hover:bg-blue-900/50"
+                          )}
+                          onClick={() => nav(`/reports/${report.id}`)}
+                        >
+                          <div
+                            className="mr-2 border rounded w-3 h-3 shrink-0"
+                            style={{ backgroundColor: report.color }}
+                          />
+                          <span className="truncate">{report.title}</span>
+                        </Button>
+                      );
+                    })}
+                  </div>
+                )}
+                {!isLoading && reports.length === 0 && (
+                  <div className="pt-2 text-muted-foreground text-center">
+                    <p className="text-xs">No reports found</p>
                   </div>
                 )}
               </div>

@@ -116,18 +116,6 @@ export function useReportsStoreHook(pb: PocketBase | null) {
     }
   };
 
-  // Auto-fetch reports when pb changes
-  useEffect(() => {
-    if (pb) {
-      fetchReports();
-    } else {
-      // Reset state when pb becomes null
-      setReports([]);
-      setLoading(false);
-      setError(null);
-    }
-  }, [pb]);
-
   return {
     reports,
     isLoading,
