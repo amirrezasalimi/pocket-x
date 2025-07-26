@@ -25,7 +25,7 @@ import { ScrollArea } from "@/shared/components/ui/scroll-area";
 import { cn } from "@/shared/lib/utils";
 import PocketBase from "pocketbase";
 import { useLocation, useNavigate } from "react-router";
-import { SetupPocketBasePlus } from "@/shared/components/setup-pocketbase-plus";
+import { SetupPocketX } from "@/shared/components/setup-pocket-x";
 import { useSetupStatus } from "@/shared/hooks/useSetupStatus";
 import type { Collection } from "../types/collection";
 import { useReportsStoreHook } from "src/shared/hooks/report-store-hook";
@@ -198,7 +198,7 @@ export function CollapsibleSidebar({
           <div className="flex flex-1 items-center gap-2">
             <span className="font-medium text-sm">Pocket X</span>
             {!isSetup && (
-              <SetupPocketBasePlus
+              <SetupPocketX
                 pb={pb as PocketBase}
                 onSetupComplete={recheckSetup}
               />

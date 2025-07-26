@@ -15,7 +15,7 @@ import {
 import { DB_SCHEMA } from "@/shared/data/pb-schema";
 import PocketBase from "pocketbase";
 
-interface SetupPocketBasePlusProps {
+interface SetupPocketXProps {
   pb: PocketBase | null;
   onSetupComplete?: () => void;
 }
@@ -29,10 +29,7 @@ interface SetupStatus {
   error: string | null;
 }
 
-export function SetupPocketBasePlus({
-  pb,
-  onSetupComplete,
-}: SetupPocketBasePlusProps) {
+export function SetupPocketX({ pb, onSetupComplete }: SetupPocketXProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [status, setStatus] = useState<SetupStatus>({
     isSetup: false,
@@ -156,8 +153,8 @@ export function SetupPocketBasePlus({
             Setup
           </DialogTitle>
           <DialogDescription>
-            This will check and import the required collections for PocketBase
-            Plus to work properly.
+            This will check and import the required collections for Pocket X to
+            work properly.
           </DialogDescription>
         </DialogHeader>
 

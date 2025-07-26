@@ -19,7 +19,7 @@ import {
   TableRow,
 } from "@/shared/components/ui/table";
 import { Badge } from "@/shared/components/ui/badge";
-import { SetupPocketBasePlus } from "@/shared/components/setup-pocketbase-plus";
+import { SetupPocketX } from "@/shared/components/setup-pocket-x";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/shared/components/ui/alert";
 import type { Report } from "@/shared/types/report";
@@ -57,7 +57,7 @@ export default function ReportsPage() {
   if (!isSetup) {
     return (
       <div className="mx-auto p-6 container">
-        <SetupPocketBasePlus pb={pb!} />
+        <SetupPocketX pb={pb!} />
       </div>
     );
   }
