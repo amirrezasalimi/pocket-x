@@ -22,10 +22,7 @@ const COLORS = [
 
 const ReportPieChart = ({ config, data }: ReportRendererProps) => {
   const mapping = config.mapping as PieChartConfig;
-
   const chartConfig: ChartConfig = {};
-
-  console.log("mapping", mapping);
 
   if (!data || data.length === 0) {
     return <div>No data available for Pie Chart</div>;
