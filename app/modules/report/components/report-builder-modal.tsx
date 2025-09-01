@@ -118,8 +118,6 @@ export function ReportBuilderModal({
     ) {
       try {
         const col = await pb.collections.getOne(id);
-        console.log(col, col.fields);
-
         if (col && Array.isArray(col.fields)) {
           setColumnsByCollectionId((prev) => ({
             ...prev,
@@ -145,6 +143,8 @@ export function ReportBuilderModal({
 
         if (Array.isArray(reportInfo.selectedCollections)) {
           setSelectedCollectionsIds(reportInfo.selectedCollections);
+          // Load columns for selected collections
+          loadCollectionColumns(reportInfo.selectedCollections);
         }
         setLoadReportLoading(false);
       });
@@ -152,6 +152,25 @@ export function ReportBuilderModal({
       setReportName("");
     }
   }, [open, item]);
+
+  const loadCollectionColumns = async (ids: string[]) => {
+    if (!pb) return;
+    try {
+      const columns: Record<string, string[]> = {};
+      for (const id of ids) {
+        if (!columnsByCollectionId[id]) {
+          const col = await pb.collections.getOne(id);
+          if (col && Array.isArray(col.fields)) {
+            columns[id] = col.fields.map((f: any) => f.name);
+            console.log(`Loaded columns for collection ${id}:`, columns[id]);
+          }
+        }
+      }
+      setColumnsByCollectionId((prev) => ({ ...prev, ...columns }));
+    } catch (e) {
+      // Optionally handle error
+    }
+  };
 
   const [saveReportLoading, setSaveReportLoading] = React.useState(false);
   // Save handler
