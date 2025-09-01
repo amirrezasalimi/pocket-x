@@ -5,7 +5,10 @@ export enum ReportType {
   TABLE = "table",
   TEXT = "text",
 }
-export const AVAILABLE_REPORT_TYPES = [ReportType.LINE_CHART];
+export const AVAILABLE_REPORT_TYPES = [
+  ReportType.LINE_CHART,
+  ReportType.PIE_CHART,
+];
 
 export const REPORT_TYPES = Object.values(ReportType).filter((type) =>
   AVAILABLE_REPORT_TYPES.includes(type as ReportType)
@@ -65,11 +68,17 @@ export interface LineChartConfig {
   }[];
 }
 
+export interface PieChartConfig {
+  valueKey: string;
+  labelKey: string;
+  formater?: (value: any) => string;
+}
+
 export interface ReportConfigData {
   inputs: Array<{
     name: string;
     label: string;
-    type: "text" | "array";
+    type: "text" | "array" | "object";
     required?: boolean;
     object_schema?: { name: string; type: string; example?: string }[];
   }>;
@@ -94,22 +103,23 @@ export const ReportConfigs: Partial<Record<ReportType, ReportConfigData>> = {
       },
     ],
   },
+  [ReportType.PIE_CHART]: {
+    inputs: [
+      {
+        name: "valueKey",
+        label: "Value",
+        type: "text",
+        required: true,
+      },
+      {
+        name: "labelKey",
+        label: "Label",
+        type: "text",
+        required: true,
+      },
+    ],
+  },
 };
-
-/* 
-{
-   xAxis: {
-     key: "date",
-     formater: (value) => new Date(value).toLocaleDateString(),
-   },
-   dataset: [
-     {
-       key: "value",
-    }
-  ]
-}
-
-*/
 
 export interface FilterItem {
   type: "text" | "num-range" | "select" | "multi-select";

@@ -95,53 +95,51 @@ export function ReportCard({ item, onSetup, isUpdating }: ReportCardProps) {
             </span>
             <div></div>
           </div>
-          {hasQuery && (
-            <div className="flex items-center gap-2 no-drag">
-              <Popover>
-                <PopoverTrigger>
-                  <Button className="bg-neutral-100 hover:bg-neutral-300 px-2 h-5 text-gray-950 hover:text-gray-900 text-xs no-drag">
-                    filters
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent>
-                  <ReportFilters
-                    filters={chat.result?.filters || {}}
-                    values={chat.filterValue || {}}
-                    onChange={(key, value) => {
-                      chat.updateFilter(key, value);
-                      chat
-                        .saveReportConfig(item.id, {
-                          filters_values: {
-                            ...chat.filterValue,
-                            [key]: value,
-                          },
-                        })
-                        .then(() => {});
-                    }}
-                  />
-                </PopoverContent>
-              </Popover>
+          <div className="flex items-center gap-2 no-drag">
+            <Popover>
+              <PopoverTrigger>
+                <Button className="bg-neutral-100 hover:bg-neutral-300 px-2 h-5 text-gray-950 hover:text-gray-900 text-xs no-drag">
+                  filters
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent>
+                <ReportFilters
+                  filters={chat.result?.filters || {}}
+                  values={chat.filterValue || {}}
+                  onChange={(key, value) => {
+                    chat.updateFilter(key, value);
+                    chat
+                      .saveReportConfig(item.id, {
+                        filters_values: {
+                          ...chat.filterValue,
+                          [key]: value,
+                        },
+                      })
+                      .then(() => {});
+                  }}
+                />
+              </PopoverContent>
+            </Popover>
 
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleRefresh}
-                className="p-1 w-6 h-6"
-                title="Refresh query"
-              >
-                <RefreshCw className="w-3 h-3" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleSettingsClick}
-                className="p-1 w-6 h-6"
-                title="Open settings"
-              >
-                <Settings className="w-3 h-3" />
-              </Button>
-            </div>
-          )}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleRefresh}
+              className="p-1 w-6 h-6"
+              title="Refresh query"
+            >
+              <RefreshCw className="w-3 h-3" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleSettingsClick}
+              className="p-1 w-6 h-6"
+              title="Open settings"
+            >
+              <Settings className="w-3 h-3" />
+            </Button>
+          </div>
         </CardTitle>
       </CardHeader>
       <CardContent className="flex justify-center items-center !p-0 h-[calc(100%_-_1.75rem)]">

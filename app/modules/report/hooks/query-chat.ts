@@ -85,10 +85,7 @@ const useQueryChat = ({
         (input) => `
 ${
   input.type === "text"
-    ? `"${input.name}": {
-      "key": "...", // to
-      "label": ".." // ex: ${input.label}
-    },`
+    ? `"${input.name}": "", // ${input.label}`
     : `"${input.name}": [
     {
        ${input.object_schema

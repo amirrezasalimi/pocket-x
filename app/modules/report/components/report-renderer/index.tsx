@@ -1,6 +1,7 @@
 import { ReportType, type ReportItem } from "@/shared/types/report";
 import { type ComponentType } from "react";
 import ReportLineChart from "./line-chart";
+import ReportPieChart from "./pie-chart";
 import { Loader2 } from "lucide-react";
 
 interface ReportRendererProps {
@@ -12,7 +13,7 @@ const Placeholder = () => <div>Not implemented</div>;
 const ChartRender: Record<ReportType, ComponentType<any>> = {
   [ReportType.LINE_CHART]: ReportLineChart,
   [ReportType.BAR_CHART]: Placeholder,
-  [ReportType.PIE_CHART]: Placeholder,
+  [ReportType.PIE_CHART]: ReportPieChart,
   [ReportType.TABLE]: Placeholder,
   [ReportType.TEXT]: Placeholder,
 };
