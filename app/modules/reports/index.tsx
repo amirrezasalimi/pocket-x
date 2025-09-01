@@ -25,6 +25,8 @@ import { Alert, AlertDescription } from "@/shared/components/ui/alert";
 import type { Report } from "@/shared/types/report";
 import { Plus, Edit2, Trash2, GripVertical } from "lucide-react";
 import { useReportsStoreHook } from "src/shared/hooks/report-store-hook";
+import { ROUTES } from "@/shared/constants";
+import { useNavigate } from "react-router";
 
 export default function ReportsPage() {
   const { pb } = useAppProvider();
@@ -38,6 +40,7 @@ export default function ReportsPage() {
     deleteReport,
     reorderReports,
   } = useReportsStoreHook(pb);
+  const navigate = useNavigate();
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingReport, setEditingReport] = useState<Report | undefined>();
@@ -167,60 +170,72 @@ export default function ReportsPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {reports.map((report, index) => (
-                  <TableRow
-                    key={report.id}
-                    draggable
-                    onDragStart={() => handleDragStart(index)}
-                    onDragOver={handleDragOver}
-                    onDrop={(e) => handleDrop(e, index)}
-                    className={`cursor-move ${
-                      draggedIndex === index ? "opacity-50" : ""
-                    }`}
-                  >
-                    <TableCell>
-                      <GripVertical className="w-4 h-4 text-muted-foreground" />
-                    </TableCell>
-                    <TableCell className="font-medium">
-                      {report.title}
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <div
-                          className="border rounded w-4 h-4"
-                          style={{ backgroundColor: report.color }}
-                        />
-                        <span className="text-muted-foreground text-sm">
-                          {report.color}
-                        </span>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant="secondary">{report.order}</Badge>
-                    </TableCell>
-                    <TableCell className="text-muted-foreground">
-                      {formatDate(report.created)}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex justify-end items-center gap-2">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleEditReport(report)}
-                        >
-                          <Edit2 className="w-4 h-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleDeleteReport(report.id)}
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                {reports.map((report, index) => {
+                  return (
+                    <TableRow
+                      key={report.id}
+                      draggable
+                      onDragStart={() => handleDragStart(index)}
+                      onDragOver={handleDragOver}
+                      onDrop={(e) => handleDrop(e, index)}
+                      className={`cursor-move ${
+                        draggedIndex === index ? "opacity-50" : ""
+                      }`}
+                    >
+                      <TableCell>
+                        <GripVertical className="w-4 h-4 text-muted-foreground" />
+                      </TableCell>
+                      <TableCell className="font-medium">
+                        {report.title}
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <div
+                            className="border rounded w-4 h-4"
+                            style={{ backgroundColor: report.color }}
+                          />
+                          <span className="text-muted-foreground text-sm">
+                            {report.color}
+                          </span>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="secondary">{report.order}</Badge>
+                      </TableCell>
+                      <TableCell className="text-muted-foreground">
+                        {formatDate(report.created)}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex justify-end items-center gap-2">
+                          <Button
+                            variant="default"
+                            size="sm"
+                            onClick={() =>
+                              navigate(ROUTES.REPORT_DETAIL(report.id))
+                            }
+                          >
+                            View
+                          </Button>
+
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleEditReport(report)}
+                          >
+                            <Edit2 className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleDeleteReport(report.id)}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
               </TableBody>
             </Table>
           )}
